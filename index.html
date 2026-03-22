@@ -3,294 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DaLi STORE App</title>
+    <title>DaLi STORE</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&family=Playfair+Display:wght@800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --gold: #d4af37;
-            --bg: #050505;
-            --card-bg: #111111;
-            --nav-bg: rgba(15, 15, 15, 0.95);
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            background: var(--bg);
-            color: #fff;
-            font-family: 'Montserrat', sans-serif;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        /* Заголовки */
-        h1 {
-            font-family: 'Playfair Display', serif;
-            color: var(--gold);
-            text-align: center;
-            font-size: 24px;
-            letter-spacing: 1px;
-            margin: 20px 0;
-        }
-
-        /* Контейнеры экранов */
-        .screen {
-            display: none;
-            padding: 15px;
-            padding-bottom: 100px;
-            animation: slideUp 0.4s ease;
-        }
-
+        :root { --gold: #d4af37; --bg: #050505; --card: #111; }
+        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Montserrat', sans-serif; }
+        
+        /* Экраны */
+        .screen { display: none; padding: 15px; padding-bottom: 100px; animation: fadeIn 0.3s; }
         .screen.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        h1 { font-family: 'Playfair Display', serif; color: var(--gold); text-align: center; font-size: 22px; }
 
         /* Сетка товаров */
-        .product-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .product-card { background: var(--card); border-radius: 15px; border: 1px solid rgba(255,215,0,0.1); overflow: hidden; display: flex; flex-direction: column; }
+        .product-img { width: 100%; height: 140px; background-size: cover; background-position: center; }
+        .product-info { padding: 10px; flex-grow: 1; }
+        .product-price { font-weight: 800; color: var(--gold); margin: 5px 0; }
+        
+        /* Кнопки и управление */
+        .controls { display: flex; align-items: center; justify-content: space-between; background: #1a1a1a; border-radius: 8px; margin: 10px 0; padding: 2px; }
+        .qty-btn { background: none; border: none; color: var(--gold); font-size: 20px; width: 30px; }
+        .buy-btn { background: var(--gold); color: #000; border: none; width: 100%; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 11px; text-transform: uppercase; }
 
-        .product-card {
-            background: var(--card-bg);
-            border-radius: 18px;
-            border: 1px solid rgba(255, 215, 0, 0.08);
-            overflow: hidden;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .product-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: var(--gold);
-            color: #000;
-            font-size: 9px;
-            font-weight: 800;
-            padding: 2px 7px;
-            border-radius: 5px;
-            z-index: 2;
-        }
-
-        .product-img {
-            width: 100%;
-            height: 140px;
-            background-size: cover;
-            background-position: center;
-            background-color: #1a1a1a;
-        }
-
-        .product-info {
-            padding: 12px;
-        }
-
-        .product-title {
-            font-size: 12px;
-            color: #bbb;
-            margin: 0 0 6px 0;
-            font-weight: 300;
-        }
-
-        .product-price {
-            font-size: 16px;
-            font-weight: 800;
-            color: #fff;
-            margin: 0 0 12px 0;
-        }
-
-        /* Управление количеством */
-        .product-controls {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #1a1a1a;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            padding: 4px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .qty-btn {
-            background: none;
-            border: none;
-            color: var(--gold);
-            font-size: 18px;
-            width: 35px;
-            height: 30px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .qty-num {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .buy-btn {
-            background: linear-gradient(135deg, #3d2b1f 0%, #1a1a1a 100%);
-            color: #fff;
-            border: 1px solid var(--gold);
-            width: 100%;
-            padding: 10px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: 0.3s;
-        }
-
-        .buy-btn:active { transform: scale(0.96); }
-
-        /* Навигация (Navbar) */
-        .navbar {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            height: 75px;
-            background: var(--nav-bg);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 1000;
-            padding-bottom: 10px;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #666;
-            text-decoration: none;
-            font-size: 10px;
-            font-weight: 600;
-            transition: 0.3s;
-            flex: 1;
-        }
-
+        /* Навигация */
+        .nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); display: flex; border-top: 1px solid rgba(255,255,255,0.05); }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; color: #555; }
         .nav-item.active { color: var(--gold); }
+        .nav-icon { font-size: 20px; margin-bottom: 3px; }
 
-        .nav-icon { font-size: 22px; margin-bottom: 4px; }
-
-        /* Заглушка для пустой корзины */
-        .empty-cart {
-            text-align: center;
-            margin-top: 50px;
-            color: #555;
-        }
+        /* Профиль */
+        .profile-card { background: var(--card); border-radius: 20px; padding: 20px; text-align: center; border: 1px solid rgba(255,215,0,0.1); }
+        .contact-btn { display: block; margin-top: 15px; padding: 12px; background: #fff; color: #000; text-decoration: none; border-radius: 12px; font-weight: 600; }
     </style>
 </head>
 <body>
 
-    <div id="screen-home" class="screen active">
+    <div id="home" class="screen active">
         <h1>DaLi STORE</h1>
-        <div style="height: 180px; background: url('https://i.ibb.co/fdTY6TFb/copy-6-DE92-EDF-28-FF-49-A9-9225-923-B8-A7-B1-BC6.jpg') center/cover; border-radius: 20px; border: 1px solid var(--gold); margin-bottom: 20px;"></div>
-        <p style="text-align: center; line-height: 1.6; color: #ccc; font-size: 14px;">
-            Эстетика, формирующая характер.<br>Твой стиль — твоя власть.
-        </p>
+        <div style="height: 200px; background: url('https://i.ibb.co/fdTY6TFb/copy-6-DE92-EDF-28-FF-49-A9-9225-923-B8-A7-B1-BC6.jpg') center/cover; border-radius: 20px; border: 1px solid var(--gold);"></div>
+        <p style="text-align: center; color: #888; margin-top: 20px; font-weight: 300;">Эстетика, формирующая характер. Твой стиль — твоя власть.</p>
     </div>
 
-    <div id="screen-catalog" class="screen">
+    <div id="catalog" class="screen">
         <h1>КАТАЛОГ</h1>
         <div class="product-grid">
             <div class="product-card">
-                <div class="product-badge">NEW</div>
                 <div class="product-img" style="background-image: url('https://i.ibb.co/fdTY6TFb/copy-6-DE92-EDF-28-FF-49-A9-9225-923-B8-A7-B1-BC6.jpg');"></div>
                 <div class="product-info">
-                    <h3 class="product-title">Premium Style 01</h3>
-                    <p class="product-price">2 990 ₽</p>
-                    <div class="product-controls">
+                    <div style="font-size: 12px; height: 32px;">Premium Item 01</div>
+                    <div class="product-price">2 990 ₽</div>
+                    <div class="controls">
                         <button class="qty-btn" onclick="changeQty(this, -1)">−</button>
-                        <span class="qty-num">1</span>
+                        <span class="qty">1</span>
                         <button class="qty-btn" onclick="changeQty(this, 1)">+</button>
                     </div>
-                    <button class="buy-btn" onclick="addToCart('Premium Style 01', 2990, this)">В корзину</button>
+                    <button class="buy-btn" onclick="addToCart('Premium Item 01', 2990, this)">В корзину</button>
                 </div>
             </div>
-
-            <div class="product-card">
-                <div class="product-img" style="background-image: url('https://i.ibb.co/fdTY6TFb/copy-6-DE92-EDF-28-FF-49-A9-9225-923-B8-A7-B1-BC6.jpg');"></div>
-                <div class="product-info">
-                    <h3 class="product-title">Premium Style 02</h3>
-                    <p class="product-price">4 500 ₽</p>
-                    <div class="product-controls">
-                        <button class="qty-btn" onclick="changeQty(this, -1)">−</button>
-                        <span class="qty-num">1</span>
-                        <button class="qty-btn" onclick="changeQty(this, 1)">+</button>
-                    </div>
-                    <button class="buy-btn" onclick="addToCart('Premium Style 02', 4500, this)">В корзину</button>
-                </div>
             </div>
-        </div>
     </div>
 
-    <div id="screen-cart" class="screen">
+    <div id="cart" class="screen">
         <h1>КОРЗИНА</h1>
-        <div id="cart-items">
-            <div class="empty-cart">Корзина пока пуста</div>
-        </div>
+        <div id="cart-content"></div>
     </div>
 
-    <nav class="navbar">
-        <div class="nav-item active" onclick="openScreen('home', this)">
-            <span class="nav-icon">🏠</span>
-            <span>Главная</span>
+    <div id="profile" class="screen">
+        <h1>ПРОФИЛЬ</h1>
+        <div class="profile-card">
+            <div id="user-photo" style="width: 80px; height: 80px; background: #222; border-radius: 50%; margin: 0 auto 10px; border: 2px solid var(--gold); background-size: cover;"></div>
+            <div id="user-name" style="font-weight: 600; font-size: 18px;">Клиент</div>
+            <a href="https://t.me/SWiWT_Teams" class="contact-btn">💬 Написать менеджеру</a>
         </div>
-        <div class="nav-item" onclick="openScreen('catalog', this)">
-            <span class="nav-icon">🛍️</span>
-            <span>Каталог</span>
-        </div>
-        <div class="nav-item" onclick="openScreen('cart', this)">
-            <span class="nav-icon">🛒</span>
-            <span>Корзина</span>
-        </div>
+        <h3 style="margin-top: 30px; font-size: 14px; color: var(--gold);">История заказов</h3>
+        <p style="color: #444; font-size: 12px;">Заказов пока нет</p>
+    </div>
+
+    <nav class="nav">
+        <div class="nav-item active" onclick="show('home', this)"><span class="nav-icon">🏠</span>Главная</div>
+        <div class="nav-item" onclick="show('catalog', this)"><span class="nav-icon">🛍️</span>Каталог</div>
+        <div class="nav-item" onclick="show('cart', this)"><span class="nav-icon">🛒</span>Корзина</div>
+        <div class="nav-item" onclick="show('profile', this)"><span class="nav-icon">👤</span>Профиль</div>
     </nav>
 
     <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
-        tg.headerColor = '#050505';
+        let cart = [];
 
-        // Переключение экранов
-        function openScreen(screenName, el) {
+        // Подгружаем данные юзера
+        if (tg.initDataUnsafe.user) {
+            document.getElementById('user-name').innerText = tg.initDataUnsafe.user.first_name;
+            if (tg.initDataUnsafe.user.photo_url) {
+                document.getElementById('user-photo').style.backgroundImage = `url('${tg.initDataUnsafe.user.photo_url}')`;
+            }
+        }
+
+        function show(id, el) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.getElementById('screen-' + screenName).classList.add('active');
+            document.getElementById(id).classList.add('active');
             el.classList.add('active');
+            if (id === 'cart') renderCart();
             tg.HapticFeedback.selectionChanged();
         }
 
-        // Изменение количества
         function changeQty(btn, delta) {
-            const numSpan = btn.parentElement.querySelector('.qty-num');
-            let val = parseInt(numSpan.innerText) + delta;
-            if (val < 1) val = 1;
-            numSpan.innerText = val;
+            let s = btn.parentElement.querySelector('.qty');
+            let v = parseInt(s.innerText) + delta;
+            if (v > 0) s.innerText = v;
             tg.HapticFeedback.impactOccurred('light');
         }
 
-        // Заглушка для корзины (логику добавим на следующем шаге)
         function addToCart(name, price, btn) {
+            let q = parseInt(btn.parentElement.querySelector('.qty').innerText);
+            cart.push({name, price, q});
             tg.HapticFeedback.notificationOccurred('success');
-            const originalText = btn.innerText;
             btn.innerText = 'ДОБАВЛЕНО';
-            btn.style.borderColor = '#fff';
-            setTimeout(() => {
-                btn.innerText = originalText;
-                btn.style.borderColor = 'var(--gold)';
-            }, 1000);
+            setTimeout(() => btn.innerText = 'В КОРЗИНУ', 1000);
+        }
+
+        function renderCart() {
+            let c = document.getElementById('cart-content');
+            if (cart.length === 0) { c.innerHTML = '<p style="text-align:center; color:#555;">Пусто</p>'; return; }
+            let total = cart.reduce((sum, item) => sum + (item.price * item.q), 0);
+            c.innerHTML = cart.map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:10px; background:#1a1a1a; padding:15px; border-radius:12px;"><span>${i.name} x${i.q}</span><span>${i.price * i.q} ₽</span></div>`).join('') + 
+            `<h2 style="text-align:right; color:var(--gold);">${total} ₽</h2>
+            <button class="buy-btn" style="padding:15px;" onclick="sendOrder()">ОФОРМИТЬ ЗАКАЗ</button>`;
+        }
+
+        function sendOrder() {
+            tg.sendData(JSON.stringify(cart)); // Отправляет данные боту
+            tg.close();
         }
     </script>
 </body>
