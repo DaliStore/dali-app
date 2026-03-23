@@ -23,43 +23,36 @@
             background: linear-gradient(135deg, #111, #000); padding: 18px; border-radius: 22px;
             border: 1px solid var(--border); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;
         }
-        .points-info span { display: block; }
         .points-val { color: var(--gold); font-weight: 800; font-size: 20px; }
 
         /* БЛОКИ НА ГЛАВНОЙ */
-        .section-title { font-size: 12px; color: #555; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; padding-left: 5px; }
+        .section-title { font-size: 12px; color: #555; text-transform: uppercase; letter-spacing: 2px; margin: 20px 0 12px 5px; }
         
-        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
+        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .main-card { 
             background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid rgba(255,255,255,0.03);
-            text-align: center; transition: 0.2s;
+            text-align: center; transition: 0.2s; cursor: pointer;
         }
         .main-card:active { transform: scale(0.95); background: #111; }
         .card-icon { font-size: 24px; margin-bottom: 8px; display: block; }
         .card-name { font-size: 12px; font-weight: 700; color: var(--gold); }
 
-        /* ТОВАРЫ В КАТАЛОГЕ */
-        .cat-tag { background: #111; padding: 8px 15px; border-radius: 10px; font-size: 11px; margin-right: 8px; display: inline-block; border: 0.5px solid #222; }
-        .cat-tag.active { border-color: var(--gold); color: var(--gold); }
-
-        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+        /* КАТАЛОГ */
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
         .product-card { background: var(--card); border-radius: 18px; overflow: hidden; border: 1px solid rgba(255,255,255,0.03); }
         .p-img { height: 130px; background: #111 center/cover; position: relative; }
-        .p-badge { position: absolute; top: 8px; right: 8px; background: var(--gold); color: #000; font-size: 8px; padding: 3px 7px; border-radius: 5px; font-weight: 800; }
         .p-desc { padding: 12px; }
-        .p-title { font-size: 11px; color: #aaa; height: 30px; }
-        .p-price { font-weight: 800; color: var(--gold); margin-top: 5px; }
-        .p-btn { width: 100%; background: #fff; color: #000; border: none; padding: 8px; border-radius: 8px; font-size: 10px; font-weight: 700; margin-top: 10px; }
-
-        /* ПРОФИЛЬ - РАЗДЕЛЫ */
-        .prof-item { background: var(--card); padding: 15px; border-radius: 15px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; border: 0.5px solid rgba(255,255,255,0.03); }
-        .prof-left { display: flex; align-items: center; gap: 12px; }
+        .p-price { font-weight: 800; color: var(--gold); margin: 5px 0; }
+        .p-btn { width: 100%; background: #fff; color: #000; border: none; padding: 10px; border-radius: 8px; font-size: 10px; font-weight: 700; cursor: pointer; }
 
         /* НАВИГАЦИЯ */
-        .nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); display: flex; border-top: 1px solid #111; z-index: 1000; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: #444; text-transform: uppercase; font-weight: 600; }
+        .nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); display: flex; border-top: 1px solid #111; z-index: 9999; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: #444; text-transform: uppercase; cursor: pointer; }
         .nav-item.active { color: var(--gold); }
         .nav-icon { font-size: 22px; margin-bottom: 4px; }
+
+        /* ПРОФИЛЬ */
+        .prof-item { background: var(--card); padding: 15px; border-radius: 15px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
     </style>
 </head>
 <body>
@@ -68,142 +61,78 @@
     
     <div id="home" class="screen active">
         <div class="loyalty-card">
-            <div class="points-info">
-                <span style="font-size: 10px; color: #666; text-transform: uppercase;">Dali Status</span>
-                <span style="font-weight: 700;">Gold Member</span>
-            </div>
-            <div class="points-val">750 DC <small style="font-size: 10px; color: #666;">🪙</small></div>
+            <div><span style="font-size: 10px; color: #666;">Dali Status</span><br><b>Gold Member</b></div>
+            <div class="points-val">750 DC 🪙</div>
         </div>
 
         <div class="section-title">Сервисы Dali</div>
         <div class="main-grid">
-            <div class="main-card" onclick="show('catalog', document.querySelectorAll('.nav-item')[1])">
-                <span class="card-icon">🛍️</span>
-                <span class="card-name">Магазин</span>
+            <div class="main-card" onclick="goToCatalog()">
+                <span class="card-icon">🛍️</span><span class="card-name">Магазин</span>
             </div>
             <div class="main-card" onclick="tg.openLink('https://t.me/SWiWT_Teams')">
-                <span class="card-icon">📊</span>
-                <span class="card-name">Трейдинг</span>
+                <span class="card-icon">📊</span><span class="card-name">Трейдинг</span>
             </div>
-            <div class="main-card" onclick="show('profile', document.querySelectorAll('.nav-item')[3])">
-                <span class="card-icon">🤝</span>
-                <span class="card-name">Партнерка</span>
+            <div class="main-card" onclick="goToProfile()">
+                <span class="card-icon">🤝</span><span class="card-name">Партнерка</span>
             </div>
             <div class="main-card">
-                <span class="card-icon">🎓</span>
-                <span class="card-name">Обучение</span>
+                <span class="card-icon">🎓</span><span class="card-name">Обучение</span>
             </div>
         </div>
 
-        <div class="section-title">Специальные предложения</div>
-        <div style="background: linear-gradient(45deg, #111, #000); padding: 25px; border-radius: 20px; border: 1px solid var(--gold); position: relative; overflow: hidden;">
-            <div style="font-weight: 800; font-size: 18px; color: #fff; margin-bottom: 5px;">Дроп "Elite Force"</div>
-            <p style="font-size: 11px; color: #888;">Скидка 15% при оплате Dali Coins</p>
-            <button style="margin-top: 15px; background: var(--gold); border: none; padding: 10px 20px; border-radius: 10px; font-weight: 800; font-size: 12px;">ПОЛУЧИТЬ</button>
-            <span style="position: absolute; right: -10px; bottom: -10px; font-size: 80px; opacity: 0.1;">👑</span>
+        <div class="section-title">Hot Offer</div>
+        <div style="background: linear-gradient(45deg, #111, #000); padding: 20px; border-radius: 20px; border: 1px solid var(--gold);">
+            <div style="font-weight: 800;">Drop "Elite Force"</div>
+            <p style="font-size: 10px; color: #666; margin: 5px 0;">Скидка 15% за Dali Coins</p>
+            <button class="p-btn" style="width: auto; padding: 8px 15px;" onclick="goToCatalog()">СМОТРЕТЬ</button>
         </div>
     </div>
 
     <div id="catalog" class="screen">
-        <div style="overflow-x: auto; white-space: nowrap; margin-bottom: 10px;">
-            <div class="cat-tag active">Все</div>
-            <div class="cat-tag">Футболки</div>
-            <div class="cat-tag">Худи</div>
-            <div class="cat-tag">VIP</div>
-        </div>
-
+        <h2 class="section-title">Каталог</h2>
         <div class="product-grid">
             <div class="product-card">
-                <div class="p-img" style="background-image: url('https://via.placeholder.com/200/111/D4AF37?text=TSHIRT');">
-                    <span class="p-badge">NEW</span>
-                </div>
+                <div class="p-img" style="background-image: url('https://via.placeholder.com/200/111/D4AF37?text=TSHIRT');"></div>
                 <div class="p-desc">
-                    <div class="p-title">Dali Signature "Gold" Tee</div>
+                    <div style="font-size: 11px;">Signature Tee</div>
                     <div class="p-price">3 900 ₽</div>
-                    <button class="p-btn" onclick="addToCart('Gold Tee', 3900, this)">В КОРЗИНУ</button>
+                    <button class="p-btn" onclick="addToCart('Signature Tee', 3900, this)">В КОРЗИНУ</button>
                 </div>
             </div>
             <div class="product-card">
-                <div class="p-img" style="background-image: url('https://via.placeholder.com/200/111/D4AF37?text=HOODIE');">
-                </div>
+                <div class="p-img" style="background-image: url('https://via.placeholder.com/200/111/D4AF37?text=HOODIE');"></div>
                 <div class="p-desc">
-                    <div class="p-title">Elite Hoodie Black-on-Black</div>
+                    <div style="font-size: 11px;">Elite Hoodie</div>
                     <div class="p-price">7 500 ₽</div>
                     <button class="p-btn" onclick="addToCart('Elite Hoodie', 7500, this)">В КОРЗИНУ</button>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="p-img" style="background-image: url('https://via.placeholder.com/200/111/D4AF37?text=CAP');">
-                </div>
-                <div class="p-desc">
-                    <div class="p-title">Dali Velvet Cap</div>
-                    <div class="p-price">2 500 ₽</div>
-                    <button class="p-btn" onclick="addToCart('Cap', 2500, this)">В КОРЗИНУ</button>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="p-img" style="background-image: url('https://via.placeholder.com/200/111/D4AF37?text=SUIT');">
-                    <span class="p-badge" style="background: #fff;">TOP</span>
-                </div>
-                <div class="p-desc">
-                    <div class="p-title">Business Silk Set</div>
-                    <div class="p-price">12 900 ₽</div>
-                    <button class="p-btn" onclick="addToCart('Silk Set', 12900, this)">В КОРЗИНУ</button>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="cart" class="screen">
-        <h2 class="section-title">Ваш выбор</h2>
-        <div id="cart-list" style="margin-bottom: 30px;">
-            <p style="text-align: center; color: #333; margin-top: 50px;">Корзина пока пуста</p>
-        </div>
-        
-        <div class="section-title">Добавьте к образу</div>
-        <div style="background: var(--card); border-radius: 15px; padding: 15px; display: flex; align-items: center; justify-content: space-between;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="width: 40px; height: 40px; background: #111; border-radius: 8px;"></div>
-                <div style="font-size: 11px;">Брендовый пыльник</div>
-            </div>
-            <button style="background: none; border: 1px solid var(--gold); color: var(--gold); padding: 5px 10px; border-radius: 8px; font-size: 10px;">+ 490 ₽</button>
+        <h2 class="section-title">Корзина</h2>
+        <div id="cart-list">
+            <p style="text-align: center; color: #444; margin-top: 50px;">Тут пока ничего нет</p>
         </div>
     </div>
 
     <div id="profile" class="screen">
-        <div style="text-align: center; margin-bottom: 30px;">
-            <div style="width: 80px; height: 80px; background: var(--card); border: 2px solid var(--gold); border-radius: 50%; margin: 0 auto 10px; background-size: cover;" id="u-photo"></div>
-            <h2 id="u-name">Business Partner</h2>
-        </div>
-
-        <div class="section-title">Личный кабинет</div>
-        <div class="prof-item">
-            <div class="prof-left"><span>🎫</span> <span>Мои Купоны</span></div>
-            <span style="color: var(--gold); font-weight: 800;">3</span>
-        </div>
-        <div class="prof-item">
-            <div class="prof-left"><span>📈</span> <span>Трейдинг Аккаунт</span></div>
-            <span style="font-size: 11px; color: #444;">Подключить</span>
-        </div>
-        <div class="prof-item">
-            <div class="prof-left"><span>👥</span> <span>Партнерская программа</span></div>
-            <span style="font-size: 11px; color: var(--gold);">5.2% Fee</span>
-        </div>
-        <div class="prof-item">
-            <div class="prof-left"><span>📍</span> <span>Мои адреса</span></div>
-            <span>→</span>
-        </div>
-
-        <a href="https://t.me/SWiWT_Teams" style="display: block; background: #fff; color: #000; text-align: center; padding: 18px; border-radius: 15px; font-weight: 800; text-decoration: none; margin-top: 20px;">СЛУЖБА ПОДДЕРЖКИ</a>
+        <h2 class="section-title">Профиль</h2>
+        <div class="prof-item"><span>🎫 Мои Купоны</span><span style="color:var(--gold);">3</span></div>
+        <div class="prof-item"><span>📈 Трейдинг</span><span>→</span></div>
+        <div class="prof-item"><span>👥 Партнерка</span><span>5.2%</span></div>
+        <a href="https://t.me/SWiWT_Teams" style="display:block; background:#fff; color:#000; text-align:center; padding:15px; border-radius:12px; margin-top:20px; font-weight:800; text-decoration:none;">ПОДДЕРЖКА</a>
     </div>
 
 </div>
 
 <nav class="nav">
-    <div class="nav-item active" onclick="show('home', this)"><span class="nav-icon">🏠</span>Главная</div>
-    <div class="nav-item" onclick="show('catalog', this)"><span class="nav-icon">🛍️</span>Каталог</div>
-    <div class="nav-item" onclick="show('cart', this)"><span class="nav-icon">🛒</span>Корзина</div>
-    <div class="nav-item" onclick="show('profile', this)"><span class="nav-icon">👤</span>Профиль</div>
+    <div class="nav-item active" onclick="showScreen('home', this)"><span class="nav-icon">🏠</span>Главная</div>
+    <div class="nav-item" onclick="showScreen('catalog', this)"><span class="nav-icon">🛍️</span>Каталог</div>
+    <div class="nav-item" onclick="showScreen('cart', this)"><span class="nav-icon">🛒</span>Корзина</div>
+    <div class="nav-item" onclick="showScreen('profile', this)"><span class="nav-icon">👤</span>Профиль</div>
 </nav>
 
 <script>
@@ -211,41 +140,45 @@
     tg.expand();
     let cart = [];
 
-    if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-        document.getElementById('u-name').innerText = tg.initDataUnsafe.user.first_name;
-        if(tg.initDataUnsafe.user.photo_url) {
-            document.getElementById('u-photo').style.backgroundImage = `url('${tg.initDataUnsafe.user.photo_url}')`;
-        }
-    }
-
-    function show(id, el) {
+    function showScreen(id, el) {
+        // Убираем активный класс у всех экранов и кнопок
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        
+        // Включаем нужный экран
         document.getElementById(id).classList.add('active');
-        el.classList.add('active');
+        if(el) el.classList.add('active');
+        
         tg.HapticFeedback.selectionChanged();
         document.getElementById('scroll-area').scrollTo(0, 0);
     }
 
+    // Быстрые переходы для кнопок на главной
+    function goToCatalog() { showScreen('catalog', document.querySelectorAll('.nav-item')[1]); }
+    function goToProfile() { showScreen('profile', document.querySelectorAll('.nav-item')[3]); }
+
     function addToCart(name, price, btn) {
         cart.push({name, price});
         tg.HapticFeedback.notificationOccurred('success');
-        btn.innerText = 'В КОРЗИНЕ ✓';
-        btn.style.background = var(--gold);
-        updateCart();
+        btn.innerText = 'ДОБАВЛЕНО';
+        btn.style.background = '#d4af37';
+        updateCartUI();
     }
 
-    function updateCart() {
+    function updateCartUI() {
         let list = document.getElementById('cart-list');
         if (cart.length === 0) return;
+        
         let total = cart.reduce((s, i) => s + i.price, 0);
         list.innerHTML = cart.map(i => `
-            <div style="display:flex; justify-content:space-between; background:#0a0a0a; padding:15px; border-radius:12px; margin-bottom:8px; border:0.5px solid #111;">
+            <div style="display:flex; justify-content:space-between; background:#0a0a0a; padding:15px; border-radius:12px; margin-bottom:8px; border:1px solid #111;">
                 <span style="font-size:12px;">${i.name}</span>
-                <span style="font-weight:800; color:var(--gold);">${i.price} ₽</span>
+                <span style="font-weight:800; color:#d4af37;">${i.price} ₽</span>
             </div>
-        `).join('') + `<div style="text-align:right; font-weight:800; font-size:20px; margin-top:15px;">${total} ₽</div>
-        <button style="width:100%; padding:18px; background:var(--gold); border:none; border-radius:15px; font-weight:800; margin-top:20px;">ОФОРМИТЬ ЗАКАЗ</button>`;
+        `).join('') + `
+            <div style="text-align:right; font-weight:800; font-size:20px; margin-top:20px;">${total} ₽</div>
+            <button class="p-btn" style="background:#d4af37; padding:18px; font-size:14px; margin-top:15px;" onclick="tg.close()">ОФОРМИТЬ ЗАКАЗ</button>
+        `;
     }
 </script>
 
