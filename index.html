@@ -3,287 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dali Store - Official App</title>
+    <title>DaLi STORE</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
-        /* --- СВЕТЛАЯ ТЕМА (КАК НА СКРИНАХ) --- */
-        :root {
-            --bg-color: #ffffff;
-            --secondary-bg: #f4f4f4;
-            --text-main: #000000;
-            --text-gray: #8e8e93;
-            --main-gold: #D4AF37;
-            --border-color: #e5e5ea;
-        }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        :root { --gold: #d4af37; --bg: #050505; --card: #111; }
+        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Montserrat', sans-serif; }
         
-        body {
-            margin: 0; padding: 0;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            overflow: hidden;
-        }
-
-        /* ШАПКА */
-        .app-header {
-            padding: 15px; text-align: center;
-            border-bottom: 0.5px solid var(--border-color);
-            position: sticky; top: 0; background: #fff; z-index: 100;
-        }
-        .app-header h1 { 
-            color: var(--main-gold); font-size: 17px; 
-            margin: 0; letter-spacing: 4px; text-transform: uppercase; font-weight: 700;
-        }
-
-        /* КОНТЕЙНЕР КОНТЕНТА */
-        .container {
-            height: calc(100vh - 135px);
-            overflow-y: auto;
-            padding: 15px;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .screen { display: none; animation: fadeIn 0.2s ease; }
+        /* Экраны */
+        .screen { display: none; padding: 15px; padding-bottom: 100px; animation: fadeIn 0.3s; }
         .screen.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* КАТАЛОГ (КАРТОЧКИ) */
-        .product-card {
-            background: var(--bg-color);
-            border: 0.5px solid var(--border-color);
-            border-radius: 12px;
-            margin-bottom: 20px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-        }
-        .product-img {
-            width: 100%; height: 260px;
-            background: var(--secondary-bg);
-            display: flex; align-items: center; justify-content: center;
-            color: #ccc; font-size: 12px;
-        }
-        .product-info { padding: 15px; }
-        .product-title { font-size: 16px; font-weight: 600; margin: 0 0 4px 0; }
-        .product-price { font-size: 18px; font-weight: 700; color: var(--main-gold); margin-bottom: 12px; }
+        h1 { font-family: 'Playfair Display', serif; color: var(--gold); text-align: center; font-size: 22px; }
 
-        .controls { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-        .qty-stepper {
-            display: flex; align-items: center; background: var(--secondary-bg);
-            border-radius: 8px; padding: 4px;
-        }
-        .step-btn {
-            background: none; border: none; font-size: 20px;
-            width: 32px; height: 32px; cursor: pointer; color: var(--text-main);
-        }
-        .qty-val { width: 30px; text-align: center; font-weight: 600; }
+        /* Сетка товаров */
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .product-card { background: var(--card); border-radius: 15px; border: 1px solid rgba(255,215,0,0.1); overflow: hidden; display: flex; flex-direction: column; }
+        .product-img { width: 100%; height: 140px; background-size: cover; background-position: center; }
+        .product-info { padding: 10px; flex-grow: 1; }
+        .product-price { font-weight: 800; color: var(--gold); margin: 5px 0; }
+        
+        /* Кнопки и управление */
+        .controls { display: flex; align-items: center; justify-content: space-between; background: #1a1a1a; border-radius: 8px; margin: 10px 0; padding: 2px; }
+        .qty-btn { background: none; border: none; color: var(--gold); font-size: 20px; width: 30px; }
+        .buy-btn { background: var(--gold); color: #000; border: none; width: 100%; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 11px; text-transform: uppercase; }
 
-        .btn-add {
-            flex-grow: 1; background: var(--main-gold);
-            color: #fff; border: none; padding: 12px;
-            border-radius: 8px; font-weight: bold; font-size: 12px;
-            text-transform: uppercase;
-        }
+        /* Навигация */
+        .nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); display: flex; border-top: 1px solid rgba(255,255,255,0.05); }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; color: #555; }
+        .nav-item.active { color: var(--gold); }
+        .nav-icon { font-size: 20px; margin-bottom: 3px; }
 
-        /* О НАС (БЛОКИ ИЗ ТВОИХ СКРИНОВ) */
-        .founders { display: flex; justify-content: space-around; margin: 25px 0; }
-        .founder-card { text-align: center; width: 45%; }
-        .f-photo {
-            width: 80px; height: 80px; border-radius: 50%;
-            border: 1.5px solid var(--main-gold); margin: 0 auto 10px;
-            background: var(--secondary-bg);
-        }
-        .feature-item {
-            background: var(--secondary-bg); padding: 16px;
-            margin-bottom: 10px; border-radius: 10px;
-            border-left: 3px solid var(--main-gold);
-        }
-        .feature-item b { font-size: 13px; text-transform: uppercase; display: block; margin-bottom: 4px; }
-        .feature-item p { margin: 0; font-size: 12px; color: var(--text-gray); line-height: 1.4; }
-
-        /* ПРОФИЛЬ */
-        .user-box {
-            background: var(--secondary-bg); border-radius: 15px;
-            padding: 20px; text-align: center; margin-bottom: 20px;
-        }
-        .u-avatar {
-            width: 70px; height: 70px; border-radius: 50%;
-            background: var(--main-gold); margin: 0 auto 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 28px; color: #fff; border: 2px solid #fff;
-        }
-
-        /* ТАББАР */
-        .tab-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 70px;
-            background: #fff; border-top: 0.5px solid var(--border-color);
-            display: flex; justify-content: space-around; align-items: center;
-        }
-        .tab {
-            display: flex; flex-direction: column; align-items: center;
-            color: var(--text-gray); font-size: 10px; cursor: pointer;
-            text-transform: uppercase; font-weight: 500;
-        }
-        .tab.active { color: var(--main-gold); }
-        .tab-icon { font-size: 22px; margin-bottom: 4px; }
-
-        /* КОРЗИНА */
-        .cart-row {
-            display: flex; justify-content: space-between; padding: 12px 0;
-            border-bottom: 0.5px solid var(--border-color);
-        }
-        .order-btn {
-            background: var(--main-gold); color: #fff; width: 100%;
-            padding: 16px; border: none; border-radius: 10px;
-            font-weight: 700; margin-top: 20px;
-        }
+        /* Профиль */
+        .profile-card { background: var(--card); border-radius: 20px; padding: 20px; text-align: center; border: 1px solid rgba(255,215,0,0.1); }
+        .contact-btn { display: block; margin-top: 15px; padding: 12px; background: #fff; color: #000; text-decoration: none; border-radius: 12px; font-weight: 600; }
     </style>
 </head>
 <body>
 
-<div class="app-header">
-    <h1>Dali Store</h1>
-</div>
-
-<div class="container" id="scroll-content">
-    
-    <div id="catalog-screen" class="screen active">
-        <div id="product-list"></div>
+    <div id="home" class="screen active">
+        <h1>DaLi STORE</h1>
+        <div style="height: 200px; background: url('https://i.ibb.co/fdTY6TFb/copy-6-DE92-EDF-28-FF-49-A9-9225-923-B8-A7-B1-BC6.jpg') center/cover; border-radius: 20px; border: 1px solid var(--gold);"></div>
+        <p style="text-align: center; color: #888; margin-top: 20px; font-weight: 300;">Эстетика, формирующая характер. Твой стиль — твоя власть.</p>
     </div>
 
-    <div id="cart-screen" class="screen">
-        <h2 style="text-align:center; font-weight:300; letter-spacing:2px;">КОРЗИНА</h2>
-        <div id="cart-items"></div>
-        <div id="cart-footer" style="display:none;">
-            <div style="display:flex; justify-content:space-between; margin-top:20px; font-size:20px; font-weight:bold;">
-                <span>Итого:</span>
-                <span id="total-price">0 ₽</span>
-            </div>
-            <button class="order-btn" onclick="sendOrder()">ОФОРМИТЬ ЗАКАЗ</button>
-        </div>
-    </div>
-
-    <div id="profile-screen" class="screen">
-        <div class="user-box">
-            <div id="u-ava" class="u-avatar">?</div>
-            <div id="u-name" style="font-weight:bold; font-size:18px;">Name</div>
-            <div id="u-id" style="color:var(--text-gray); font-size:12px;">@username</div>
-        </div>
-        <div class="feature-item"><b>История заказов</b><p>Список ваших покупок будет здесь.</p></div>
-    </div>
-
-    <div id="about-screen" class="screen">
-        <h2 style="text-align:center; font-weight:300; letter-spacing:3px;">О НАС</h2>
-        <div class="founders">
-            <div class="founder-card"><div class="f-photo"></div><b>АЛЕКСЕЙ</b><br><small>Founder</small></div>
-            <div class="founder-card"><div class="f-photo"></div><b>МАРИЯ</b><br><small>Founder</small></div>
-        </div>
-        <div class="feature-item"><b>Эстетика и характер</b><p>Каждая деталь Dali подчеркивает вашу индивидуальность.</p></div>
-        <div class="feature-item"><b>Премиум качество</b><p>Используем только лучшие материалы для наших коллекций.</p></div>
-        <div class="feature-item"><b>Локальный бренд</b><p>С гордостью создаем стиль в Арзамасе.</p></div>
-        <div class="feature-item"><b>Быстрая доставка</b><p>Ваш заказ будет у вас в кратчайшие сроки.</p></div>
-        <div class="feature-item"><b>Уникальный дизайн</b><p>Лимитированные серии для тех, кто ценит эксклюзив.</p></div>
-    </div>
-
-</div>
-
-<div class="tab-bar">
-    <div class="tab active" onclick="show('catalog-screen', this)"><span class="tab-icon">🏠</span><span>Магазин</span></div>
-    <div class="tab" onclick="show('cart-screen', this)"><span class="tab-icon">🛒</span><span>Корзина</span></div>
-    <div class="tab" onclick="show('profile-screen', this)"><span class="tab-icon">👤</span><span>Профиль</span></div>
-    <div class="tab" onclick="show('about-screen', this)"><span class="tab-icon">✨</span><span>О нас</span></div>
-</div>
-
-<script>
-    let tg = window.Telegram.WebApp;
-    tg.expand();
-    tg.headerColor = '#ffffff';
-
-    let cart = [];
-    const products = [
-        { id: 1, name: "Premium T-Shirt", price: 3500 },
-        { id: 2, name: "Dali Hoodie", price: 6200 },
-        { id: 3, name: "Street Pants", price: 4800 }
-    ];
-
-    // Привязка данных TG
-    if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-        const u = tg.initDataUnsafe.user;
-        document.getElementById('u-name').innerText = u.first_name + ' ' + (u.last_name || '');
-        document.getElementById('u-id').innerText = '@' + (u.username || 'user');
-        if(u.photo_url) document.getElementById('u-ava').innerHTML = `<img src="${u.photo_url}" style="width:100%;height:100%;border-radius:50%;">`;
-    }
-
-    function renderCatalog() {
-        const list = document.getElementById('product-list');
-        list.innerHTML = products.map(p => `
+    <div id="catalog" class="screen">
+        <h1>КАТАЛОГ</h1>
+        <div class="product-grid">
             <div class="product-card">
-                <div class="product-img">DALI PHOTO</div>
+                <div class="product-img" style="background-image: url('https://i.ibb.co/fdTY6TFb/copy-6-DE92-EDF-28-FF-49-A9-9225-923-B8-A7-B1-BC6.jpg');"></div>
                 <div class="product-info">
-                    <p class="product-title">${p.name}</p>
-                    <p class="product-price">${p.price} ₽</p>
+                    <div style="font-size: 12px; height: 32px;">Premium Item 01</div>
+                    <div class="product-price">2 990 ₽</div>
                     <div class="controls">
-                        <div class="qty-stepper">
-                            <button class="step-btn" onclick="step(this, -1)">-</button>
-                            <span class="qty-val">1</span>
-                            <button class="step-btn" onclick="step(this, 1)">+</button>
-                        </div>
-                        <button class="btn-add" onclick="add('${p.name}', ${p.price}, this)">В корзину</button>
+                        <button class="qty-btn" onclick="changeQty(this, -1)">−</button>
+                        <span class="qty">1</span>
+                        <button class="qty-btn" onclick="changeQty(this, 1)">+</button>
                     </div>
+                    <button class="buy-btn" onclick="addToCart('Premium Item 01', 2990, this)">В корзину</button>
                 </div>
             </div>
-        `).join('');
-    }
-
-    function step(btn, d) {
-        let s = btn.parentElement.querySelector('.qty-val');
-        let v = parseInt(s.innerText) + d;
-        if(v > 0) { s.innerText = v; tg.HapticFeedback.impactOccurred('light'); }
-    }
-
-    function add(n, p, btn) {
-        let q = parseInt(btn.parentElement.querySelector('.qty-val').innerText);
-        cart.push({ n, p, q });
-        tg.HapticFeedback.notificationOccurred('success');
-        btn.innerText = 'ДОБАВЛЕНО';
-        setTimeout(() => btn.innerText = 'В КОРЗИНУ', 1000);
-    }
-
-    function renderCart() {
-        const items = document.getElementById('cart-items');
-        const footer = document.getElementById('cart-footer');
-        if(cart.length === 0) {
-            items.innerHTML = '<p style="text-align:center; color:grey; margin-top:50px;">Пусто</p>';
-            footer.style.display = 'none';
-            return;
-        }
-        footer.style.display = 'block';
-        items.innerHTML = cart.map((i, idx) => `
-            <div class="cart-row">
-                <span>${i.n} (x${i.q})</span>
-                <b>${i.p * i.q} ₽</b>
             </div>
-        `).join('');
-        document.getElementById('total-price').innerText = cart.reduce((s,i) => s + (i.p*i.q), 0) + ' ₽';
-    }
+    </div>
 
-    function show(id, el) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        el.classList.add('active');
-        if(id === 'cart-screen') renderCart();
-        tg.HapticFeedback.selectionChanged();
-        document.getElementById('scroll-content').scrollTo(0,0);
-    }
+    <div id="cart" class="screen">
+        <h1>КОРЗИНА</h1>
+        <div id="cart-content"></div>
+    </div>
 
-    function sendOrder() {
-        tg.sendData(JSON.stringify(cart));
-        tg.close();
-    }
+    <div id="profile" class="screen">
+        <h1>ПРОФИЛЬ</h1>
+        <div class="profile-card">
+            <div id="user-photo" style="width: 80px; height: 80px; background: #222; border-radius: 50%; margin: 0 auto 10px; border: 2px solid var(--gold); background-size: cover;"></div>
+            <div id="user-name" style="font-weight: 600; font-size: 18px;">Клиент</div>
+            <a href="https://t.me/SWiWT_Teams" class="contact-btn">💬 Написать менеджеру</a>
+        </div>
+        <h3 style="margin-top: 30px; font-size: 14px; color: var(--gold);">История заказов</h3>
+        <p style="color: #444; font-size: 12px;">Заказов пока нет</p>
+    </div>
 
-    renderCatalog();
-</script>
+    <nav class="nav">
+        <div class="nav-item active" onclick="show('home', this)"><span class="nav-icon">🏠</span>Главная</div>
+        <div class="nav-item" onclick="show('catalog', this)"><span class="nav-icon">🛍️</span>Каталог</div>
+        <div class="nav-item" onclick="show('cart', this)"><span class="nav-icon">🛒</span>Корзина</div>
+        <div class="nav-item" onclick="show('profile', this)"><span class="nav-icon">👤</span>Профиль</div>
+    </nav>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+        let cart = [];
+
+        // Подгружаем данные юзера
+        if (tg.initDataUnsafe.user) {
+            document.getElementById('user-name').innerText = tg.initDataUnsafe.user.first_name;
+            if (tg.initDataUnsafe.user.photo_url) {
+                document.getElementById('user-photo').style.backgroundImage = `url('${tg.initDataUnsafe.user.photo_url}')`;
+            }
+        }
+
+        function show(id, el) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            el.classList.add('active');
+            if (id === 'cart') renderCart();
+            tg.HapticFeedback.selectionChanged();
+        }
+
+        function changeQty(btn, delta) {
+            let s = btn.parentElement.querySelector('.qty');
+            let v = parseInt(s.innerText) + delta;
+            if (v > 0) s.innerText = v;
+            tg.HapticFeedback.impactOccurred('light');
+        }
+
+        function addToCart(name, price, btn) {
+            let q = parseInt(btn.parentElement.querySelector('.qty').innerText);
+            cart.push({name, price, q});
+            tg.HapticFeedback.notificationOccurred('success');
+            btn.innerText = 'ДОБАВЛЕНО';
+            setTimeout(() => btn.innerText = 'В КОРЗИНУ', 1000);
+        }
+
+        function renderCart() {
+            let c = document.getElementById('cart-content');
+            if (cart.length === 0) { c.innerHTML = '<p style="text-align:center; color:#555;">Пусто</p>'; return; }
+            let total = cart.reduce((sum, item) => sum + (item.price * item.q), 0);
+            c.innerHTML = cart.map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:10px; background:#1a1a1a; padding:15px; border-radius:12px;"><span>${i.name} x${i.q}</span><span>${i.price * i.q} ₽</span></div>`).join('') + 
+            `<h2 style="text-align:right; color:var(--gold);">${total} ₽</h2>
+            <button class="buy-btn" style="padding:15px;" onclick="sendOrder()">ОФОРМИТЬ ЗАКАЗ</button>`;
+        }
+
+        function sendOrder() {
+            tg.sendData(JSON.stringify(cart)); // Отправляет данные боту
+            tg.close();
+        }
+    </script>
 </body>
-</html>
