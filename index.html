@@ -5,151 +5,196 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dali Store Mini App</title>
     <style>
-        /* Общие настройки - Глубокий черный и золотой акцент */
+        /* --- Базовые стили (Темный Премиум) --- */
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #050505; /* Почти черный для глубины */
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            color: #D4AF37; /* Цвет античного золота */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: #050505;
+            font-family: 'Segoe UI', sans-serif;
+            color: #D4AF37;
+            overflow-x: hidden;
         }
 
-        /* Главный контейнер */
         .app-container {
             width: 100%;
-            max-width: 400px;
-            height: 100vh;
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* --- ЭКРАН 1: ОБЛОЖКА --- */
+        #home-screen {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            padding: 40px 20px;
+            height: 100vh;
+            padding: 60px 20px;
             box-sizing: border-box;
-            background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
-        }
-
-        /* Верхняя часть - Минималистичный Логотип */
-        .header {
             text-align: center;
-            margin-top: 20px;
         }
 
-        /* Маленький аккуратный символ вместо огромной аватарки */
         .mini-logo {
-            width: 60px;
-            height: 60px;
+            width: 70px; height: 70px;
             border: 1px solid #D4AF37;
             border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto 20px;
-            font-size: 24px;
-            font-weight: 200;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+            display: flex; justify-content: center; align-items: center;
+            font-size: 28px; font-weight: 200;
+            margin-bottom: 20px;
         }
 
         .brand-name {
-            font-size: 28px;
-            letter-spacing: 8px; /* Создает "премиальный" разлет букв */
-            text-transform: uppercase;
-            font-weight: 300;
-            margin: 0;
+            font-size: 32px; letter-spacing: 10px;
+            text-transform: uppercase; font-weight: 300;
         }
 
-        /* Центральная часть - Слоган */
-        .hero-section {
+        /* --- ЭКРАН 2: МАГАЗИН (Скрыт по умолчанию) --- */
+        #shop-screen {
+            display: none;
+            padding: 20px;
+        }
+
+        .shop-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        /* --- Сетка товаров --- */
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .product-card {
+            background: #111;
+            border: 1px solid #222;
+            padding: 10px;
+            border-radius: 4px;
             text-align: center;
         }
 
-        .slogan {
-            font-size: 14px;
-            letter-spacing: 2px;
-            color: #888; /* Приглушенный серый, чтобы золото выделялось */
-            text-transform: uppercase;
+        .product-img {
+            width: 100%;
+            height: 160px;
+            background: #1a1a1a; /* Заглушка под фото */
+            object-fit: cover;
             margin-bottom: 10px;
         }
 
-        .highlight {
+        .product-title {
+            font-size: 14px;
+            color: #fff;
+            margin: 5px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .product-price {
+            font-size: 16px;
+            font-weight: bold;
             color: #D4AF37;
-            font-style: italic;
         }
 
-        /* Нижняя часть - Кнопки управления */
-        .footer-nav {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .main-btn {
+        /* --- Кнопки --- */
+        .btn {
             background: transparent;
             border: 1px solid #D4AF37;
             color: #D4AF37;
-            padding: 16px;
-            border-radius: 2px; /* Почти острые углы для строгости */
-            font-size: 13px;
-            letter-spacing: 3px;
+            padding: 15px 30px;
             text-transform: uppercase;
+            letter-spacing: 2px;
             cursor: pointer;
-            transition: all 0.4s ease;
+            transition: 0.3s;
         }
 
-        .main-btn:hover {
+        .btn:hover {
             background: #D4AF37;
             color: #000;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
         }
 
-        .secondary-btn {
-            background: none;
+        .buy-btn {
+            margin-top: 10px;
+            padding: 8px 15px;
+            font-size: 12px;
+            width: 100%;
+        }
+
+        .back-btn {
             border: none;
-            color: #555;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            text-decoration: none;
+            font-size: 24px;
         }
-
-        /* Тонкая линия разделитель */
-        .divider {
-            width: 40px;
-            height: 1px;
-            background-color: #D4AF37;
-            margin: 20px auto;
-        }
-
     </style>
 </head>
 <body>
 
-    <div class="app-container">
+<div class="app-container">
+
+    <div id="home-screen">
+        <div>
+            <center><div class="mini-logo">D</div></center>
+            <h1 class="brand-name">Dali Store</h1>
+            <p style="color: #666; letter-spacing: 2px;">ARZAMAS PREM</p>
+        </div>
         
-        <div class="header">
-            <div class="mini-logo">D</div> <h1 class="brand-name">Dali Store</h1>
-            <div class="divider"></div>
+        <div style="width: 100%;">
+            <button class="btn" style="width: 80%;" onclick="openShop()">Смотреть каталог</button>
         </div>
-
-        <div class="hero-section">
-            <p class="slogan">Премиальное качество <br>в <span class="highlight">Арзамасе</span></p>
-        </div>
-
-        <div class="footer-nav">
-            <button class="main-btn" onclick="console.log('Каталог')">Смотреть каталог</button>
-            <button class="main-btn" style="border-color: #333; color: #888;">Мои заказы</button>
-            <a href="#" class="secondary-btn">Поддержка / Контакты</a>
-        </div>
-
     </div>
+
+    <div id="shop-screen">
+        <div class="shop-header">
+            <button class="back-btn" onclick="openHome()" style="background:none; color:#D4AF37; cursor:pointer;">←</button>
+            <h2 style="font-size: 18px; letter-spacing: 3px;">КАТАЛОГ</h2>
+            <div style="width: 24px;"></div> </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <div class="product-img"> </div>
+                <p class="product-title">T-Shirt Premium</p>
+                <p class="product-price">2 900 ₽</p>
+                <button class="btn buy-btn">В корзину</button>
+            </div>
+            <div class="product-card">
+                <div class="product-img"></div>
+                <p class="product-title">Hoodie Black</p>
+                <p class="product-price">5 500 ₽</p>
+                <button class="btn buy-btn">В корзину</button>
+            </div>
+            <div class="product-card">
+                <div class="product-img"></div>
+                <p class="product-title">Cargo Pants</p>
+                <p class="product-price">4 200 ₽</p>
+                <button class="btn buy-btn">В корзину</button>
+            </div>
+            <div class="product-card">
+                <div class="product-img"></div>
+                <p class="product-title">Sneakers</p>
+                <p class="product-price">8 900 ₽</p>
+                <button class="btn buy-btn">В корзину</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Логика переключения экранов
+    function openShop() {
+        document.getElementById('home-screen').style.display = 'none';
+        document.getElementById('shop-screen').style.display = 'block';
+    }
+
+    function openHome() {
+        document.getElementById('home-screen').style.display = 'flex';
+        document.getElementById('shop-screen').style.display = 'none';
+    }
+</script>
 
 </body>
 </html>
