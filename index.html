@@ -3,267 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DaLi STORE — Elite Ecosystem</title>
+    <title>DaLi STORE — Ultimate Edition</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --gold: #d4af37; 
-            --bg: #000000; 
-            --card: #0a0a0a; 
-            --text: #ffffff; 
-            --border: rgba(212, 175, 55, 0.1);
-        }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        :root { --gold: #d4af37; --bg: #000; --card: #0a0a0a; --text: #fff; --border: rgba(212, 175, 55, 0.15); }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Montserrat', sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         
-        body { 
-            margin: 0; padding: 0; 
-            background-color: var(--bg); 
-            color: var(--text); 
-            font-family: 'Montserrat', sans-serif; 
-            overflow: hidden; /* Фиксируем экран */
-            display: flex; flex-direction: column; height: 100vh;
-        }
-        
-        /* ШАПКА */
-        .app-header {
-            padding: 20px; text-align: center;
-            border-bottom: 0.5px solid rgba(255,255,255,0.05);
-            background: var(--bg); position: sticky; top: 0; z-index: 100;
-        }
-        .app-header h1 { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 18px; text-transform: uppercase; letter-spacing: 3px; margin: 0; }
-
-        /* КОНТЕНТ СО СКРОЛЛОМ */
-        .content {
-            flex-grow: 1; overflow-y: auto; padding: 25px;
-            padding-bottom: 110px; -webkit-overflow-scrolling: touch;
-        }
-
+        .content { flex-grow: 1; overflow-y: auto; padding: 20px; padding-bottom: 110px; -webkit-overflow-scrolling: touch; }
         .screen { display: none; animation: fadeIn 0.3s ease; }
         .screen.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- ГЛАВНАЯ: ПРЕМИУМ СЕТКА 6 БЛОКОВ --- */
-        .loyalty-card {
-            background: linear-gradient(135deg, #111, #000); padding: 25px; border-radius: 25px;
-            border: 1px solid var(--border); margin-bottom: 30px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5); display: flex; justify-content: space-between; align-items: center;
-        }
-        .points-val { color: var(--gold); font-weight: 800; font-size: 22px; text-shadow: 0 0 10px var(--gold); }
+        /* HEADER */
+        .app-header { padding: 15px; text-align: center; border-bottom: 0.5px solid #111; position: sticky; top: 0; background: var(--bg); z-index: 100; }
+        .app-header h1 { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 16px; letter-spacing: 3px; margin: 0; }
 
-        .elite-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* 2 колонки */
-            gap: 15px;
-            margin-bottom: 30px;
-        }
+        /* ГЛАВНАЯ - ИНФО БЛОКИ */
+        .info-card { background: var(--card); border-radius: 25px; padding: 20px; border: 1px solid var(--border); margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .stats-row { display: flex; justify-content: space-around; margin: 15px 0; }
+        .stat-item { text-align: center; }
+        .stat-num { display: block; color: var(--gold); font-weight: 800; font-size: 18px; }
+        .stat-lab { font-size: 9px; color: #555; text-transform: uppercase; }
 
-        .grid-item {
-            background: var(--card);
-            height: 150px; border-radius: 22px;
-            border: 1px solid rgba(255,255,255,0.03);
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            padding: 15px; text-align: center;
-            transition: 0.2s; cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        .grid-item:active { transform: scale(0.96); border-color: var(--gold); }
-        .item-icon { font-size: 32px; margin-bottom: 10px; display: block; }
-        .item-label { font-size: 11px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
-        .item-sub { font-size: 9px; color: #555; margin-top: 3px; }
+        /* КАТАЛОГ - КАТЕГОРИИ */
+        .cat-parent { background: #111; padding: 20px; border-radius: 20px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
+        .cat-subs { display: none; padding: 10px; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; animation: slideDown 0.3s ease; }
+        .sub-btn { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 12px; font-size: 11px; text-align: center; color: var(--gold); font-weight: 600; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- КАТАЛОГ: ОБЪЕМНЫЕ КАРТОЧКИ --- */
-        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .product-card { background: var(--card); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        .p-img { width: 100%; height: 150px; background: #111 center/cover; }
-        .p-info { padding: 15px; }
-        .p-title { font-size: 11px; color: #aaa; margin-bottom: 5px; height: 30px; line-height: 1.3; }
-        .p-price { font-weight: 800; color: var(--gold); font-size: 16px; margin-bottom: 10px; }
-        .buy-btn { width: 100%; background: #fff; color: #000; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; box-shadow: 0 5px 10px rgba(255,255,255,0.1); }
+        /* ПРОФИЛЬ - ЭКОСИСТЕМА */
+        .eco-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 20px; }
+        .eco-item { background: linear-gradient(135deg, #0f0f0f, #000); padding: 20px; border-radius: 22px; border: 1px solid var(--border); display: flex; align-items: center; gap: 15px; }
+        .eco-icon { font-size: 24px; background: rgba(212, 175, 55, 0.1); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 15px; }
 
-        /* --- КОРЗИНА И ПРОФИЛЬ --- */
-        .cart-item { display: flex; justify-content: space-between; align-items: center; background: #0d0d0d; padding: 18px; border-radius: 15px; border: 0.5px solid rgba(255,255,255,0.03); margin-bottom: 10px; }
-        .prof-card { background: var(--card); border-radius: 25px; padding: 25px; text-align: center; border: 1px solid var(--border); margin-bottom: 25px; }
-        .u-ava { width: 80px; height: 80px; border-radius: 50%; background: #222; margin: 0 auto 15px; border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; font-size: 24px; color: #fff; }
+        /* КАРТОЧКИ ТОВАРОВ */
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .p-card { background: var(--card); border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.03); }
+        .p-img { height: 130px; background: #1a1a1a center/cover; }
+        .p-info { padding: 12px; }
+        .p-btn { width: 100%; background: #fff; color: #000; border: none; padding: 10px; border-radius: 10px; font-weight: 800; font-size: 10px; margin-top: 8px; }
 
-        /* --- НАВИГАЦИЯ --- */
-        .nav { 
-            position: fixed; bottom: 0; width: 100%; height: 80px; 
-            background: rgba(5,5,5,0.95); backdrop-filter: blur(15px); 
-            display: flex; border-top: 1px solid rgba(255,255,255,0.05); z-index: 1000;
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: #444; text-transform: uppercase; font-weight: 600; cursor: pointer; }
+        /* NAV */
+        .nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); display: flex; border-top: 1px solid #111; z-index: 1000; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: #444; font-weight: 600; }
         .nav-item.active { color: var(--gold); }
         .nav-icon { font-size: 22px; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
-    <div class="app-header">
-        <h1>DaLi STORE</h1>
+<div class="app-header"><h1>DALI STORE</h1></div>
+
+<div class="content" id="main-scroll">
+    
+    <div id="home" class="screen active">
+        <div class="info-card">
+            <div style="font-size: 14px; font-weight: 700; color: var(--gold); margin-bottom: 10px;">DALI ECOSYSTEM</div>
+            <p style="font-size: 11px; color: #888; line-height: 1.6;">Мы создаем не просто одежду, а стиль жизни. Dali Store — это объединение моды, технологий и бизнеса.</p>
+            <div class="stats-row">
+                <div class="stat-item"><span class="stat-num">740+</span><span class="stat-lab">Клиентов</span></div>
+                <div class="stat-item"><span class="stat-num">12</span><span class="stat-lab">Стран</span></div>
+                <div class="stat-item"><span class="stat-num">24/7</span><span class="stat-lab">Офис</span></div>
+            </div>
+        </div>
+
+        <div style="font-size: 12px; color: #555; text-transform: uppercase; margin: 25px 0 15px 5px; letter-spacing: 2px;">Как мы работаем</div>
+        <div class="info-card" style="padding: 15px;">
+            <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                <span style="color: var(--gold);">01.</span>
+                <div style="font-size: 12px;"><b>Выбор и заказ</b><br><span style="color:#555;">Оформление через Mini App</span></div>
+            </div>
+            <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                <span style="color: var(--gold);">02.</span>
+                <div style="font-size: 12px;"><b>Premium Quality</b><br><span style="color:#555;">Проверка каждой нити перед отправкой</span></div>
+            </div>
+            <div style="display: flex; gap: 15px;">
+                <span style="color: var(--gold);">03.</span>
+                <div style="font-size: 12px;"><b>Elite Delivery</b><br><span style="color:#555;">Доставка до двери по всему миру</span></div>
+            </div>
+        </div>
     </div>
 
-    <div class="content" id="main-scroll">
-        
-        <div id="home" class="screen active">
-            <div class="loyalty-card">
+    <div id="catalog" class="screen">
+        <div class="cat-parent" onclick="toggleSub('sub-clothes')">
+            <span>👕 ОДЕЖДА</span><span>▼</span>
+        </div>
+        <div class="cat-subs" id="sub-clothes">
+            <div class="sub-btn" onclick="filter('tee')">Футболки</div>
+            <div class="sub-btn" onclick="filter('hoodie')">Худи / Кофты</div>
+            <div class="sub-btn" onclick="filter('pants')">Штаны</div>
+            <div class="sub-btn" onclick="filter('suits')">Костюмы</div>
+        </div>
+
+        <div class="cat-parent" onclick="toggleSub('sub-acc')">
+            <span>🕶️ АКСЕССУАРЫ</span><span>▼</span>
+        </div>
+        <div class="cat-subs" id="sub-acc">
+            <div class="sub-btn">Очки</div>
+            <div class="sub-btn">Кепки</div>
+            <div class="sub-btn">Сумки</div>
+            <div class="sub-btn">Часы</div>
+        </div>
+
+        <div class="cat-parent" onclick="toggleSub('sub-dali')">
+            <span>👑 EXCLUSIVE BY DALI</span><span>▼</span>
+        </div>
+        <div class="cat-subs" id="sub-dali">
+            <div class="sub-btn">Limited Drop</div>
+            <div class="sub-btn">Custom Art</div>
+        </div>
+
+        <div class="product-grid" style="margin-top: 20px;">
+            <div class="p-card">
+                <div class="p-img" style="background-image: url('https://via.placeholder.com/200/111/D4AF37?text=DALI+TEE');"></div>
+                <div class="p-info">
+                    <div style="font-size: 10px; color: #666;">Dali Signature</div>
+                    <div style="font-weight: 700; font-size: 13px; margin: 5px 0;">Premium Tee Black</div>
+                    <div style="color: var(--gold); font-weight: 800;">4 500 ₽</div>
+                    <button class="p-btn" onclick="addToCart('Premium Tee', 4500, this)">В КОРЗИНУ</button>
+                </div>
+            </div>
+            <div class="p-card">
+                <div class="p-img" style="background-image: url('https://via.placeholder.com/200/111/D4AF37?text=DALI+HOODIE');"></div>
+                <div class="p-info">
+                    <div style="font-size: 10px; color: #666;">Elite Force</div>
+                    <div style="font-weight: 700; font-size: 13px; margin: 5px 0;">Gold Hoodie</div>
+                    <div style="color: var(--gold); font-weight: 800;">8 900 ₽</div>
+                    <button class="p-btn" onclick="addToCart('Gold Hoodie', 8900, this)">В КОРЗИНУ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cart" class="screen">
+        <h2 style="text-align:center; color: var(--gold); font-weight:300;">КОРЗИНА</h2>
+        <div id="cart-list" style="margin-top: 30px; text-align: center; color: #444;">Список пуст</div>
+    </div>
+
+    <div id="profile" class="screen">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <div style="width: 70px; height: 70px; background: #111; border-radius: 50%; margin: 0 auto 10px; border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; font-size: 24px;">👤</div>
+            <div id="u-name" style="font-weight: 800;">DALI PARTNER</div>
+        </div>
+
+        <div class="eco-grid">
+            <div class="eco-item">
+                <div class="eco-icon">🎓</div>
                 <div>
-                    <div style="font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 1px;">Dali Status</div>
-                    <div style="font-weight: 700; font-size: 16px;">Gold Member</div>
-                </div>
-                <div class="points-val">750 DC <small style="font-size: 12px; color:#666;">🪙</small></div>
-            </div>
-
-            <div class="elite-grid">
-                <div class="grid-item" onclick="show('catalog', document.querySelectorAll('.nav-item')[1])">
-                    <span class="item-icon">🛍️</span>
-                    <span class="item-label">Магазин</span>
-                    <span class="item-sub">Новый дроп</span>
-                </div>
-                <div class="grid-item" onclick="tg.openLink('https://t.me/SWiWT_Teams')">
-                    <span class="item-icon">📈</span>
-                    <span class="item-label">Трейдинг</span>
-                    <span class="item-sub">Сигналы</span>
-                </div>
-                <div class="grid-item">
-                    <span class="item-icon">🎓</span>
-                    <span class="item-label">Обучение</span>
-                    <span class="item-sub">Бизнес курсы</span>
-                </div>
-                <div class="grid-item">
-                    <span class="item-icon">👑</span>
-                    <span class="item-label">VIP Клуб</span>
-                    <span class="item-sub">Закрытый доступ</span>
-                </div>
-                <div class="grid-item">
-                    <span class="item-icon">🤝</span>
-                    <span class="item-label">Партнерка</span>
-                    <span class="item-sub">Зарабатывай</span>
-                </div>
-                <div class="grid-item">
-                    <span class="item-icon">🎬</span>
-                    <span class="item-label">Медиа</span>
-                    <span class="item-sub">Блог Dali</span>
+                    <div style="font-weight: 700; color: var(--gold); font-size: 13px;">ОБУЧЕНИЕ</div>
+                    <div style="font-size: 10px; color: #555;">Курсы по трейдингу и бизнесу</div>
                 </div>
             </div>
-
-            <p style="text-align: center; color: #444; font-size: 12px; font-style: italic;">"Эстетика, формирующая характер"</p>
-        </div>
-
-        <div id="catalog" class="screen">
-            <h2 style="color:var(--gold); text-align:center; margin-bottom:20px; font-weight:300; letter-spacing:2px;">КАТАЛОГ</h2>
-            <div class="product-grid">
-                <div class="product-card">
-                    <div class="p-img" style="background-image: url('https://via.placeholder.com/200/111/D4AF37?text=TSHIRT');"></div>
-                    <div class="p-info">
-                        <div class="p-title">Dali Signature "Gold" Tee</div>
-                        <div class="p-price">3 500 ₽</div>
-                        <button class="buy-btn" onclick="addToCart('Gold Tee', 3500, this)">В Корзину</button>
-                    </div>
+            <div class="eco-item">
+                <div class="eco-icon">👥</div>
+                <div>
+                    <div style="font-weight: 700; color: var(--gold); font-size: 13px;">ПАРТНЕРКА</div>
+                    <div style="font-size: 10px; color: #555;">Твой доход: 10% с продаж</div>
                 </div>
-                <div class="product-card">
-                    <div class="p-img" style="background-image: url('https://via.placeholder.com/200/111/D4AF37?text=HOODIE');"></div>
-                    <div class="p-info">
-                        <div class="p-title">Elite Hoodie "Black Force"</div>
-                        <div class="p-price">6 900 ₽</div>
-                        <button class="buy-btn" onclick="addToCart('Elite Hoodie', 6900, this)">В Корзину</button>
-                    </div>
+            </div>
+            <div class="eco-item">
+                <div class="eco-icon">📺</div>
+                <div>
+                    <div style="font-weight: 700; color: var(--gold); font-size: 13px;">МЕДИА</div>
+                    <div style="font-size: 10px; color: #555;">Наш блог и новости бренда</div>
                 </div>
             </div>
         </div>
 
-        <div id="cart" class="screen">
-            <h2 style="color:var(--gold); text-align:center; margin-bottom:20px;">КОРЗИНА</h2>
-            <div id="cart-content">
-                <p style="text-align:center; color:#444; margin-top:50px;">Корзина пока пуста</p>
-            </div>
-        </div>
-
-        <div id="profile" class="screen">
-            <h2 style="color:var(--gold); text-align:center; margin-bottom:20px;">ПРОФИЛЬ</h2>
-            <div class="prof-card">
-                <div id="u-ava" class="u-ava">?</div>
-                <div id="u-name" style="font-weight:700; font-size:18px;">Business Partner</div>
-                <p style="color:#666; font-size:12px; margin-top:5px;">@username</p>
-            </div>
-            
-            <div style="background:#0a0a0a; border-radius:20px; padding:20px; border:0.5px solid rgba(255,255,255,0.03);">
-                <div style="display:flex; justify-content:space-between; color:#666; font-size:13px; margin-bottom:10px;">
-                    <span>Купоны</span><span style="color:var(--gold);">3 шт.</span>
-                </div>
-                <div style="display:flex; justify-content:space-between; color:#666; font-size:13px;">
-                    <span>Заказы</span><span>0</span>
-                </div>
-            </div>
-            
-            <a href="https://t.me/SWiWT_Teams" style="display:block; background:#fff; color:#000; text-align:center; padding:15px; border-radius:12px; margin-top:20px; font-weight:800; text-decoration:none;">ПОДДЕРЖКА</a>
-        </div>
-
+        <a href="https://t.me/SWiWT_Teams" style="display: block; background: #fff; color: #000; text-align: center; padding: 18px; border-radius: 15px; font-weight: 800; text-decoration: none; margin-top: 30px; font-size: 12px;">СВЯЗАТЬСЯ С ОСНОВАТЕЛЕМ</a>
     </div>
 
-    <nav class="nav">
-        <div class="nav-item active" onclick="show('home', this)"><span class="nav-icon">🏠</span>Главная</div>
-        <div class="nav-item" onclick="show('catalog', this)"><span class="nav-icon">🛍️</span>Каталог</div>
-        <div class="nav-item" onclick="show('cart', this)"><span class="nav-icon">🛒</span>Корзина</div>
-        <div class="nav-item" onclick="show('profile', this)"><span class="nav-icon">👤</span>Профиль</div>
-    </nav>
+</div>
 
-    <script>
-        let tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.headerColor = '#000000'; // Черный хедер
+<nav class="nav">
+    <div class="nav-item active" onclick="show('home', this)"><span class="nav-icon">🏠</span>ГЛАВНАЯ</div>
+    <div class="nav-item" onclick="show('catalog', this)"><span class="nav-icon">🛍️</span>КАТАЛОГ</div>
+    <div class="nav-item" onclick="show('cart', this)"><span class="nav-icon">🛒</span>КОРЗИНА</div>
+    <div class="nav-item" onclick="show('profile', this)"><span class="nav-icon">👤</span>ПРОФИЛЬ</div>
+</nav>
 
-        let cart = [];
+<script>
+    let tg = window.Telegram.WebApp;
+    tg.expand();
+    let cart = [];
 
-        // Авторизация через Telegram
-        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            const user = tg.initDataUnsafe.user;
-            document.getElementById('u-name').innerText = user.first_name;
-            if (user.photo_url) {
-                document.getElementById('u-ava').innerHTML = `<img src="${user.photo_url}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
-            }
-        }
+    function show(id, el) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        el.classList.add('active');
+        tg.HapticFeedback.selectionChanged();
+        document.getElementById('main-scroll').scrollTo(0,0);
+    }
 
-        // Логика переключения табов
-        function show(id, el) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            el.classList.add('active');
-            
-            if (id === 'cart') renderCart();
-            
-            tg.HapticFeedback.selectionChanged();
-            document.getElementById('main-scroll').scrollTo(0, 0);
-        }
+    function toggleSub(id) {
+        let el = document.getElementById(id);
+        let isOpen = el.style.display === 'grid';
+        document.querySelectorAll('.cat-subs').forEach(s => s.style.display = 'none');
+        el.style.display = isOpen ? 'none' : 'grid';
+        tg.HapticFeedback.impactOccurred('light');
+    }
 
-        function addToCart(name, price, btn) {
-            cart.push({name, price});
-            tg.HapticFeedback.notificationOccurred('success');
-            btn.innerText = 'ГОТОВО✓';
-            setTimeout(() => btn.innerText = 'В КОРЗИНУ', 1000);
-        }
+    function addToCart(name, price, btn) {
+        cart.push({name, price});
+        tg.HapticFeedback.notificationOccurred('success');
+        btn.innerText = 'В КОРЗИНЕ ✓';
+        btn.style.background = '#d4af37';
+        updateCart();
+    }
 
-        function renderCart() {
-            const cont = document.getElementById('cart-content');
-            if (cart.length === 0) { 
-                cont.innerHTML = '<p style="text-align:center; color:#444; margin-top:50px;">Пусто</p>'; return; 
-            }
-            
-            let total = cart.reduce((sum, item) => sum + item.price, 0);
-            cont.innerHTML = cart.map(i => `
-                <div class="cart-item">
-                    <span>${i.name}</span>
-                    <span style="font-weight:800; color:var(--gold);">${i.price} ₽</span>
-                </div>
-            `).join('') + `
-                <div style="text-align:right; font-weight:800; font-size:20px; margin-top:20px;">${total} ₽</div>
-                <button class="buy-btn" style="background:var(--gold); padding:18px; font-size:12px; margin-top:20px;">ОФОРМИТЬ В TG</button>
-            `;
-        }
-    </script>
+    function updateCart() {
+        let list = document.getElementById('cart-list');
+        if(cart.length === 0) return;
+        let total = cart.reduce((s, i) => s + i.price, 0);
+        list.innerHTML = cart.map(i => `
+            <div style="display:flex; justify-content:space-between; padding:15px; background:#0a0a0a; border-radius:12px; margin-bottom:8px; border:1px solid #111;">
+                <span style="font-size:12px;">${i.name}</span>
+                <span style="color:var(--gold); font-weight:800;">${i.price} ₽</span>
+            </div>
+        `).join('') + `<div style="margin-top:20px; font-size:18px; font-weight:800;">ИТОГО: ${total} ₽</div>
+        <button style="width:100%; padding:18px; background:var(--gold); border:none; border-radius:15px; font-weight:800; margin-top:20px;" onclick="tg.close()">ОФОРМИТЬ В TG</button>`;
+    }
+</script>
+
 </body>
 </html>
