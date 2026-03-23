@@ -2,144 +2,154 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DaLi STORE</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dali Store Mini App</title>
     <style>
-        :root { --gold: #d4af37; --bg: #050505; --card: #111; }
-        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Montserrat', sans-serif; }
-        
-        /* Экраны */
-        .screen { display: none; padding: 15px; padding-bottom: 100px; animation: fadeIn 0.3s; }
-        .screen.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* Общие настройки - Глубокий черный и золотой акцент */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #050505; /* Почти черный для глубины */
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #D4AF37; /* Цвет античного золота */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
 
-        h1 { font-family: 'Playfair Display', serif; color: var(--gold); text-align: center; font-size: 22px; }
+        /* Главный контейнер */
+        .app-container {
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
+        }
 
-        /* Сетка товаров */
-        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .product-card { background: var(--card); border-radius: 15px; border: 1px solid rgba(255,215,0,0.1); overflow: hidden; display: flex; flex-direction: column; }
-        .product-img { width: 100%; height: 140px; background-size: cover; background-position: center; }
-        .product-info { padding: 10px; flex-grow: 1; }
-        .product-price { font-weight: 800; color: var(--gold); margin: 5px 0; }
-        
-        /* Кнопки и управление */
-        .controls { display: flex; align-items: center; justify-content: space-between; background: #1a1a1a; border-radius: 8px; margin: 10px 0; padding: 2px; }
-        .qty-btn { background: none; border: none; color: var(--gold); font-size: 20px; width: 30px; }
-        .buy-btn { background: var(--gold); color: #000; border: none; width: 100%; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 11px; text-transform: uppercase; }
+        /* Верхняя часть - Минималистичный Логотип */
+        .header {
+            text-align: center;
+            margin-top: 20px;
+        }
 
-        /* Навигация */
-        .nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); display: flex; border-top: 1px solid rgba(255,255,255,0.05); }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; color: #555; }
-        .nav-item.active { color: var(--gold); }
-        .nav-icon { font-size: 20px; margin-bottom: 3px; }
+        /* Маленький аккуратный символ вместо огромной аватарки */
+        .mini-logo {
+            width: 60px;
+            height: 60px;
+            border: 1px solid #D4AF37;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            font-size: 24px;
+            font-weight: 200;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
 
-        /* Профиль */
-        .profile-card { background: var(--card); border-radius: 20px; padding: 20px; text-align: center; border: 1px solid rgba(255,215,0,0.1); }
-        .contact-btn { display: block; margin-top: 15px; padding: 12px; background: #fff; color: #000; text-decoration: none; border-radius: 12px; font-weight: 600; }
+        .brand-name {
+            font-size: 28px;
+            letter-spacing: 8px; /* Создает "премиальный" разлет букв */
+            text-transform: uppercase;
+            font-weight: 300;
+            margin: 0;
+        }
+
+        /* Центральная часть - Слоган */
+        .hero-section {
+            text-align: center;
+        }
+
+        .slogan {
+            font-size: 14px;
+            letter-spacing: 2px;
+            color: #888; /* Приглушенный серый, чтобы золото выделялось */
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            color: #D4AF37;
+            font-style: italic;
+        }
+
+        /* Нижняя часть - Кнопки управления */
+        .footer-nav {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .main-btn {
+            background: transparent;
+            border: 1px solid #D4AF37;
+            color: #D4AF37;
+            padding: 16px;
+            border-radius: 2px; /* Почти острые углы для строгости */
+            font-size: 13px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .main-btn:hover {
+            background: #D4AF37;
+            color: #000;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .secondary-btn {
+            background: none;
+            border: none;
+            color: #555;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        /* Тонкая линия разделитель */
+        .divider {
+            width: 40px;
+            height: 1px;
+            background-color: #D4AF37;
+            margin: 20px auto;
+        }
+
     </style>
 </head>
 <body>
 
-    <div id="home" class="screen active">
-        <h1>DaLi STORE</h1>
-        <div style="height: 200px; background: url('https://i.ibb.co/fdTY6TFb/copy-6-DE92-EDF-28-FF-49-A9-9225-923-B8-A7-B1-BC6.jpg') center/cover; border-radius: 20px; border: 1px solid var(--gold);"></div>
-        <p style="text-align: center; color: #888; margin-top: 20px; font-weight: 300;">Эстетика, формирующая характер. Твой стиль — твоя власть.</p>
-    </div>
-
-    <div id="catalog" class="screen">
-        <h1>КАТАЛОГ</h1>
-        <div class="product-grid">
-            <div class="product-card">
-                <div class="product-img" style="background-image: url('https://i.ibb.co/fdTY6TFb/copy-6-DE92-EDF-28-FF-49-A9-9225-923-B8-A7-B1-BC6.jpg');"></div>
-                <div class="product-info">
-                    <div style="font-size: 12px; height: 32px;">Premium Item 01</div>
-                    <div class="product-price">2 990 ₽</div>
-                    <div class="controls">
-                        <button class="qty-btn" onclick="changeQty(this, -1)">−</button>
-                        <span class="qty">1</span>
-                        <button class="qty-btn" onclick="changeQty(this, 1)">+</button>
-                    </div>
-                    <button class="buy-btn" onclick="addToCart('Premium Item 01', 2990, this)">В корзину</button>
-                </div>
-            </div>
-            </div>
-    </div>
-
-    <div id="cart" class="screen">
-        <h1>КОРЗИНА</h1>
-        <div id="cart-content"></div>
-    </div>
-
-    <div id="profile" class="screen">
-        <h1>ПРОФИЛЬ</h1>
-        <div class="profile-card">
-            <div id="user-photo" style="width: 80px; height: 80px; background: #222; border-radius: 50%; margin: 0 auto 10px; border: 2px solid var(--gold); background-size: cover;"></div>
-            <div id="user-name" style="font-weight: 600; font-size: 18px;">Клиент</div>
-            <a href="https://t.me/SWiWT_Teams" class="contact-btn">💬 Написать менеджеру</a>
+    <div class="app-container">
+        
+        <div class="header">
+            <div class="mini-logo">D</div> <h1 class="brand-name">Dali Store</h1>
+            <div class="divider"></div>
         </div>
-        <h3 style="margin-top: 30px; font-size: 14px; color: var(--gold);">История заказов</h3>
-        <p style="color: #444; font-size: 12px;">Заказов пока нет</p>
+
+        <div class="hero-section">
+            <p class="slogan">Премиальное качество <br>в <span class="highlight">Арзамасе</span></p>
+        </div>
+
+        <div class="footer-nav">
+            <button class="main-btn" onclick="console.log('Каталог')">Смотреть каталог</button>
+            <button class="main-btn" style="border-color: #333; color: #888;">Мои заказы</button>
+            <a href="#" class="secondary-btn">Поддержка / Контакты</a>
+        </div>
+
     </div>
 
-    <nav class="nav">
-        <div class="nav-item active" onclick="show('home', this)"><span class="nav-icon">🏠</span>Главная</div>
-        <div class="nav-item" onclick="show('catalog', this)"><span class="nav-icon">🛍️</span>Каталог</div>
-        <div class="nav-item" onclick="show('cart', this)"><span class="nav-icon">🛒</span>Корзина</div>
-        <div class="nav-item" onclick="show('profile', this)"><span class="nav-icon">👤</span>Профиль</div>
-    </nav>
-
-    <script>
-        let tg = window.Telegram.WebApp;
-        tg.expand();
-        let cart = [];
-
-        // Подгружаем данные юзера
-        if (tg.initDataUnsafe.user) {
-            document.getElementById('user-name').innerText = tg.initDataUnsafe.user.first_name;
-            if (tg.initDataUnsafe.user.photo_url) {
-                document.getElementById('user-photo').style.backgroundImage = `url('${tg.initDataUnsafe.user.photo_url}')`;
-            }
-        }
-
-        function show(id, el) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            el.classList.add('active');
-            if (id === 'cart') renderCart();
-            tg.HapticFeedback.selectionChanged();
-        }
-
-        function changeQty(btn, delta) {
-            let s = btn.parentElement.querySelector('.qty');
-            let v = parseInt(s.innerText) + delta;
-            if (v > 0) s.innerText = v;
-            tg.HapticFeedback.impactOccurred('light');
-        }
-
-        function addToCart(name, price, btn) {
-            let q = parseInt(btn.parentElement.querySelector('.qty').innerText);
-            cart.push({name, price, q});
-            tg.HapticFeedback.notificationOccurred('success');
-            btn.innerText = 'ДОБАВЛЕНО';
-            setTimeout(() => btn.innerText = 'В КОРЗИНУ', 1000);
-        }
-
-        function renderCart() {
-            let c = document.getElementById('cart-content');
-            if (cart.length === 0) { c.innerHTML = '<p style="text-align:center; color:#555;">Пусто</p>'; return; }
-            let total = cart.reduce((sum, item) => sum + (item.price * item.q), 0);
-            c.innerHTML = cart.map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:10px; background:#1a1a1a; padding:15px; border-radius:12px;"><span>${i.name} x${i.q}</span><span>${i.price * i.q} ₽</span></div>`).join('') + 
-            `<h2 style="text-align:right; color:var(--gold);">${total} ₽</h2>
-            <button class="buy-btn" style="padding:15px;" onclick="sendOrder()">ОФОРМИТЬ ЗАКАЗ</button>`;
-        }
-
-        function sendOrder() {
-            tg.sendData(JSON.stringify(cart)); // Отправляет данные боту
-            tg.close();
-        }
-    </script>
 </body>
 </html>
