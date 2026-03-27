@@ -5,131 +5,117 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DALI ESSENCE</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #fff; --bg: #000; --gold: #d4af37; --red: #ff003c; --blue: #00f0ff; }
+        :root { --gold: #d4af37; --bg: #000; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
-            margin: 0; background: var(--bg); color: var(--accent); 
-            font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh;
-            text-transform: uppercase;
+            margin: 0; background: var(--bg); color: #fff; 
+            font-family: 'Montserrat', sans-serif; overflow: hidden; height: 100vh;
         }
 
-        /* ФОН */
+        /* ТВОЙ ЖИВОЙ ФОН (БЕЗ ЧЕРНЫХ ПЯТЕН) */
         .main-background {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 0; overflow: hidden;
+            z-index: 0; overflow: hidden;
         }
         .gradient-sphere {
-            position: absolute; width: 100vw; height: 100vw; border-radius: 50%;
-            filter: blur(60px); opacity: 0.1; z-index: 1;
+            position: absolute; width: 150vw; height: 150vw; border-radius: 50%;
+            filter: blur(80px); opacity: 0.15; z-index: 1;
+            background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+            animation: move 15s infinite alternate ease-in-out;
         }
-        .sphere-1 { background: var(--gold); top: -10%; left: -10%; }
+        @keyframes move { from { transform: translate(-20%, -20%); } to { transform: translate(10%, 10%); } }
 
-        /* КОНТЕЙНЕР ДЛЯ ВЕРХНЕЙ ЧАСТИ */
-        .hero-section {
-            position: relative;
-            z-index: 10;
-            padding-top: 60px; /* Отступ от верха экрана ТГ */
-            text-align: center;
-            width: 100%;
-        }
-
-        /* КОМПАКТНЫЙ ГЛИТЧ-ЗАГОЛОВОК */
-        .glitch-wrapper {
-            position: relative;
-            display: inline-block;
+        /* ЦЕНТРАЛЬНЫЙ БЛОК */
+        .hero {
+            position: relative; z-index: 10;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: flex-start; padding-top: 15vh;
+            height: 100vh;
         }
 
-        .glitch-text {
-            font-size: 24px; /* Уменьшили, чтобы точно влезло */
+        /* НОВЫЙ МОЩНЫЙ ГЛИТЧ */
+        .dali-title {
+            font-size: 42px; /* Больше и мощнее */
             font-weight: 900;
-            letter-spacing: 3px;
-            color: #fff;
+            letter-spacing: -1px;
             position: relative;
-            margin: 0;
+            color: #fff;
+            text-align: center;
+            /* Убираем любые фоны, оставляем чистый текст */
+            background: none;
         }
 
-        /* Полосы глитча */
-        .glitch-text span {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg);
-        }
-        .l1 { animation: g1 2s infinite linear alternate-reverse; clip-path: inset(0 0 70% 0); text-shadow: 2px 0 var(--red); }
-        .l2 { animation: g2 3s infinite linear alternate-reverse; clip-path: inset(40% 0 30% 0); text-shadow: -2px 0 var(--blue); }
-        .l3 { animation: g3 2.5s infinite linear alternate-reverse; clip-path: inset(75% 0 0 0); text-shadow: 1px 0 var(--gold); }
-
-        @keyframes g1 { 0% { transform: translateX(-3px); } 100% { transform: translateX(3px); } }
-        @keyframes g2 { 0% { transform: translateX(4px); } 100% { transform: translateX(-4px); } }
-        @keyframes g3 { 0% { transform: translateX(-2px); } 100% { transform: translateX(2px); } }
-
-        .subtitle {
-            font-size: 7px;
-            color: #333;
-            letter-spacing: 5px;
-            margin-top: 15px;
+        .dali-title::before, .dali-title::after {
+            content: 'DALI ESSENCE';
+            position: absolute; top: 0; left: 0; width: 100%;
             opacity: 0.7;
         }
 
-        /* МИНИМАЛИСТИЧНЫЕ ВКЛАДКИ (НИЗ) */
+        /* Эффект расслоения (RGB Shift) без черного фона */
+        .dali-title::before {
+            color: #ff003c;
+            z-index: -1;
+            animation: glitch-v2 0.4s cubic-bezier(.25, .46, .45, .94) both infinite;
+        }
+
+        .dali-title::after {
+            color: #00f0ff;
+            z-index: -2;
+            animation: glitch-v2 0.4s cubic-bezier(.25, .46, .45, .94) reverse both infinite;
+        }
+
+        @keyframes glitch-v2 {
+            0% { transform: translate(0); }
+            20% { transform: translate(-3px, 2px); }
+            40% { transform: translate(-3px, -2px); }
+            60% { transform: translate(3px, 2px); }
+            80% { transform: translate(3px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        .protocol {
+            font-size: 9px; color: var(--gold);
+            letter-spacing: 4px; margin-top: 20px;
+            opacity: 0.6; font-weight: 400;
+        }
+
+        /* МИНИ-ВКЛАДКИ */
         .nav { 
-            position: fixed; bottom: 25px; left: 20px; right: 20px; 
-            height: 60px; /* Сделали ниже */
-            background: rgba(15,15,15,0.7); 
-            backdrop-filter: blur(20px); 
-            display: flex; justify-content: space-around; align-items: center; 
-            border-radius: 20px; 
-            border: 1px solid rgba(255,255,255,0.05); 
-            z-index: 1000; 
+            position: fixed; bottom: 30px; left: 10%; right: 10%;
+            height: 55px; background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(15px); border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            display: flex; justify-content: space-around; align-items: center;
         }
-
-        .nav-item { 
-            display: flex; flex-direction: column; align-items: center; 
-            color: #444; 
-            font-size: 7px; /* Очень маленький шрифт */
-            font-weight: 700; 
-            letter-spacing: 0.5px;
-            transition: 0.3s;
-        }
-
+        .nav-item { font-size: 8px; color: #555; font-weight: 700; display: flex; flex-direction: column; align-items: center; }
         .nav-item.active { color: #fff; }
-        .nav-icon { font-size: 16px; margin-bottom: 3px; }
-
     </style>
 </head>
 <body>
 
-<div id="app">
-    <div class="main-background">
-        <div class="gradient-sphere sphere-1"></div>
-    </div>
-
-    <div class="hero-section">
-        <div class="glitch-wrapper">
-            <h1 class="glitch-text">
-                DALI ESSENCE
-                <span class="l1">DALI ESSENCE</span>
-                <span class="l2">DALI ESSENCE</span>
-                <span class="l3">DALI ESSENCE</span>
-            </h1>
-        </div>
-        <div class="subtitle">SYSTEM PROTOCOL V1.0</div>
-    </div>
-
-    <nav class="nav">
-        <div class="nav-item active"><span class="nav-icon">🏠</span>HOME</div>
-        <div class="nav-item"><span class="nav-icon">🛍️</span>SHOP</div>
-        <div class="nav-item"><span class="nav-icon">🛒</span>BAG</div>
-        <div class="nav-item"><span class="nav-icon">👤</span>ID</div>
-    </nav>
+<div class="main-background">
+    <div class="gradient-sphere"></div>
 </div>
+
+<div class="hero">
+    <h1 class="dali-title">DALI ESSENCE</h1>
+    <div class="protocol">SYSTEM PROTOCOL V1.0</div>
+</div>
+
+<nav class="nav">
+    <div class="nav-item active">HOME</div>
+    <div class="nav-item">SHOP</div>
+    <div class="nav-item">BAG</div>
+    <div class="nav-item">ID</div>
+</nav>
 
 <script>
     let tg = window.Telegram.WebApp;
     tg.expand();
     tg.headerColor = '#000000';
-    tg.backgroundColor = '#000000';
 </script>
 </body>
 </html>
