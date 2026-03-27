@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DALI ESSENCE — SYSTEM</title>
+    <title>DALI ESSENCE</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap" rel="stylesheet">
     <style>
         :root { --accent: #fff; --bg: #000; --gold: #d4af37; --red: #ff003c; --blue: #00f0ff; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
             margin: 0; background: var(--bg); color: var(--accent); 
@@ -16,128 +16,112 @@
             text-transform: uppercase;
         }
 
-        /* ФОН С ПАРАЛЛАКСОМ */
+        /* ФОН */
         .main-background {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 0; overflow: hidden; pointer-events: none;
+            background: #000; z-index: 0; overflow: hidden;
         }
         .gradient-sphere {
-            position: absolute; width: 130vw; height: 130vw; border-radius: 50%;
-            filter: blur(80px); opacity: 0.15; z-index: 1; will-change: transform;
+            position: absolute; width: 100vw; height: 100vw; border-radius: 50%;
+            filter: blur(60px); opacity: 0.1; z-index: 1;
         }
-        .sphere-1 { background: radial-gradient(circle, var(--gold) 0%, transparent 70%); top: -30%; left: -30%; }
-        .sphere-2 { background: radial-gradient(circle, #333 0%, transparent 70%); bottom: -30%; right: -30%; }
-        .noise { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('https://grainy-gradients.vercel.app/noise.svg'); opacity: 0.05; z-index: 2; pointer-events: none; }
+        .sphere-1 { background: var(--gold); top: -10%; left: -10%; }
 
-        /* ЭФФЕКТ ИЗ ПИНТЕРЕСТА: SLICE GLITCH */
-        .hero-container {
-            flex: 1; display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            position: relative; z-index: 10; height: 100vh;
-        }
-
-        .glitch-box {
+        /* КОНТЕЙНЕР ДЛЯ ВЕРХНЕЙ ЧАСТИ */
+        .hero-section {
             position: relative;
-            font-size: 52px;
-            font-weight: 900;
-            line-height: 1;
-            letter-spacing: -2px;
+            z-index: 10;
+            padding-top: 60px; /* Отступ от верха экрана ТГ */
+            text-align: center;
+            width: 100%;
         }
 
-        /* Основной текст */
+        /* КОМПАКТНЫЙ ГЛИТЧ-ЗАГОЛОВОК */
+        .glitch-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
         .glitch-text {
-            position: relative;
+            font-size: 24px; /* Уменьшили, чтобы точно влезло */
+            font-weight: 900;
+            letter-spacing: 3px;
             color: #fff;
-            animation: glitch-main 4s infinite;
+            position: relative;
+            margin: 0;
         }
 
-        /* Слои для нарезки (псевдоэлементы) */
-        .glitch-text::before,
-        .glitch-text::after {
-            content: 'DALI ESSENCE';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: #000;
-            clip: rect(0, 0, 0, 0); /* Скрываем изначально */
+        /* Полосы глитча */
+        .glitch-text span {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg);
+        }
+        .l1 { animation: g1 2s infinite linear alternate-reverse; clip-path: inset(0 0 70% 0); text-shadow: 2px 0 var(--red); }
+        .l2 { animation: g2 3s infinite linear alternate-reverse; clip-path: inset(40% 0 30% 0); text-shadow: -2px 0 var(--blue); }
+        .l3 { animation: g3 2.5s infinite linear alternate-reverse; clip-path: inset(75% 0 0 0); text-shadow: 1px 0 var(--gold); }
+
+        @keyframes g1 { 0% { transform: translateX(-3px); } 100% { transform: translateX(3px); } }
+        @keyframes g2 { 0% { transform: translateX(4px); } 100% { transform: translateX(-4px); } }
+        @keyframes g3 { 0% { transform: translateX(-2px); } 100% { transform: translateX(2px); } }
+
+        .subtitle {
+            font-size: 7px;
+            color: #333;
+            letter-spacing: 5px;
+            margin-top: 15px;
+            opacity: 0.7;
         }
 
-        /* Красный слой со смещением вверх-влево */
-        .glitch-text::before {
-            left: 3px;
-            text-shadow: -2px 0 var(--red);
-            animation: glitch-slice-1 2s infinite linear alternate-reverse;
+        /* МИНИМАЛИСТИЧНЫЕ ВКЛАДКИ (НИЗ) */
+        .nav { 
+            position: fixed; bottom: 25px; left: 20px; right: 20px; 
+            height: 60px; /* Сделали ниже */
+            background: rgba(15,15,15,0.7); 
+            backdrop-filter: blur(20px); 
+            display: flex; justify-content: space-around; align-items: center; 
+            border-radius: 20px; 
+            border: 1px solid rgba(255,255,255,0.05); 
+            z-index: 1000; 
         }
 
-        /* Синий слой со смещением вниз-вправо */
-        .glitch-text::after {
-            left: -3px;
-            text-shadow: 2px 0 var(--blue);
-            animation: glitch-slice-2 3s infinite linear alternate-reverse;
+        .nav-item { 
+            display: flex; flex-direction: column; align-items: center; 
+            color: #444; 
+            font-size: 7px; /* Очень маленький шрифт */
+            font-weight: 700; 
+            letter-spacing: 0.5px;
+            transition: 0.3s;
         }
 
-        /* Линия сканирования */
-        .scanline {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            z-index: 15;
-            pointer-events: none;
-            animation: scan 2s linear infinite;
-        }
-
-        /* АНИМАЦИИ КУСКОВ ТЕКСТА (SLICE) */
-        @keyframes glitch-slice-1 {
-            0% { clip: rect(10px, 9999px, 20px, 0); transform: translateX(-5px); }
-            20% { clip: rect(30px, 9999px, 40px, 0); transform: translateX(5px); }
-            40% { clip: rect(50px, 9999px, 60px, 0); transform: translateX(-10px); }
-            60% { clip: rect(70px, 9999px, 80px, 0); transform: translateX(10px); }
-            80% { clip: rect(20px, 9999px, 90px, 0); transform: translateX(-5px); }
-            100% { clip: rect(40px, 9999px, 10px, 0); transform: translateX(0); }
-        }
-
-        @keyframes glitch-slice-2 {
-            0% { clip: rect(80px, 9999px, 90px, 0); transform: translateX(5px); }
-            25% { clip: rect(10px, 9999px, 30px, 0); transform: translateX(-5px); }
-            50% { clip: rect(40px, 9999px, 50px, 0); transform: translateX(10px); }
-            75% { clip: rect(60px, 9999px, 70px, 0); transform: translateX(-10px); }
-            100% { clip: rect(20px, 9999px, 40px, 0); transform: translateX(0); }
-        }
-
-        @keyframes scan {
-            0% { top: -10%; }
-            100% { top: 110%; }
-        }
-
-        /* NAV */
-        .nav { position: fixed; bottom: 20px; left: 15px; right: 15px; height: 75px; background: rgba(10,10,10,0.7); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; border-radius: 25px; border: 1px solid rgba(255,255,255,0.06); z-index: 1000; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: #333; font-size: 8px; font-weight: 800; letter-spacing: 1px; }
         .nav-item.active { color: #fff; }
+        .nav-icon { font-size: 16px; margin-bottom: 3px; }
+
     </style>
 </head>
 <body>
 
 <div id="app">
     <div class="main-background">
-        <div class="gradient-sphere sphere-1" id="s1"></div>
-        <div class="gradient-sphere sphere-2" id="s2"></div>
-        <div class="noise"></div>
+        <div class="gradient-sphere sphere-1"></div>
     </div>
 
-    <div class="hero-container">
-        <div class="glitch-box">
-            <div class="scanline"></div>
-            <h1 class="glitch-text">DALI ESSENCE</h1>
+    <div class="hero-section">
+        <div class="glitch-wrapper">
+            <h1 class="glitch-text">
+                DALI ESSENCE
+                <span class="l1">DALI ESSENCE</span>
+                <span class="l2">DALI ESSENCE</span>
+                <span class="l3">DALI ESSENCE</span>
+            </h1>
         </div>
-        <p style="font-size: 8px; color: #444; margin-top: 40px; letter-spacing: 6px; font-weight: 400; opacity: 0.6;">DALI SYSTEM PROTOCOL V1.0</p>
+        <div class="subtitle">SYSTEM PROTOCOL V1.0</div>
     </div>
 
     <nav class="nav">
-        <div class="nav-item active">🏠 HOME</div>
-        <div class="nav-item">🛍️ SHOP</div>
-        <div class="nav-item">🛒 BAG</div>
-        <div class="nav-item">👤 ID</div>
+        <div class="nav-item active"><span class="nav-icon">🏠</span>HOME</div>
+        <div class="nav-item"><span class="nav-icon">🛍️</span>SHOP</div>
+        <div class="nav-item"><span class="nav-icon">🛒</span>BAG</div>
+        <div class="nav-item"><span class="nav-icon">👤</span>ID</div>
     </nav>
 </div>
 
@@ -145,20 +129,7 @@
     let tg = window.Telegram.WebApp;
     tg.expand();
     tg.headerColor = '#000000';
-
-    const s1 = document.getElementById('s1');
-    const s2 = document.getElementById('s2');
-
-    // Параллакс
-    document.addEventListener('touchmove', (e) => {
-        const touch = e.touches[0];
-        const x = touch.clientX / window.innerWidth;
-        const y = touch.clientY / window.innerHeight;
-        requestAnimationFrame(() => {
-            s1.style.transform = `translate3d(${x * 30}px, ${y * 30}px, 0)`;
-            s2.style.transform = `translate3d(${-x * 45}px, ${-y * 45}px, 0)`;
-        });
-    });
+    tg.backgroundColor = '#000000';
 </script>
 </body>
 </html>
