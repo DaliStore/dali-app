@@ -5,84 +5,116 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DALI ESSENCE — SYSTEM</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap" rel="stylesheet">
     <style>
         :root { --accent: #fff; --bg: #000; --gold: #d4af37; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
         
         body { 
             margin: 0; background: var(--bg); color: var(--accent); 
-            font-family: 'Space Mono', monospace; overflow: hidden; height: 100vh;
+            font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh;
             text-transform: uppercase;
         }
 
-        /* ФОН (ОПТИМИЗИРОВАННЫЙ ИЗ ПРОШЛОГО ШАГА) */
+        /* ФОН (ОПТИМИЗИРОВАННЫЙ, С ПАРАЛЛАКСОМ НА JS) */
         .main-background {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 0; overflow: hidden; pointer-events: none;
         }
         .gradient-sphere {
-            position: absolute; width: 120vw; height: 120vw; border-radius: 50%;
-            filter: blur(60px); opacity: 0.15; z-index: 1; will-change: transform;
+            position: absolute; width: 130vw; height: 130vw; border-radius: 50%;
+            filter: blur(80px); opacity: 0.18; z-index: 1; will-change: transform;
         }
-        .sphere-1 { background: radial-gradient(circle, var(--gold) 0%, transparent 70%); top: -20%; left: -20%; }
-        .sphere-2 { background: radial-gradient(circle, #333 0%, transparent 70%); bottom: -20%; right: -20%; }
-        .noise { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('https://grainy-gradients.vercel.app/noise.svg'); opacity: 0.05; z-index: 2; pointer-events: none; }
+        .sphere-1 { background: radial-gradient(circle, var(--gold) 0%, transparent 70%); top: -30%; left: -30%; }
+        .sphere-2 { background: radial-gradient(circle, #333 0%, transparent 70%); bottom: -30%; right: -30%; }
+        .noise { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('https://grainy-gradients.vercel.app/noise.svg'); opacity: 0.06; z-index: 2; pointer-events: none; mix-blend-mode: overlay; }
 
-        /* ЭТАП 2: GLITCH HEADER */
+        /* ЭТАП 2: МАССИВНЫЙ ПИКСЕЛЬНЫЙ ГЛИТЧ */
         .hero-container {
             flex: 1; display: flex; flex-direction: column;
             justify-content: center; align-items: center;
-            position: relative; z-index: 10;
+            position: relative; z-index: 10; height: 100vh;
+        }
+
+        .glitch-wrapper {
+            position: relative;
+            /* Убрал сskew, оставил чистую доминанту */
         }
 
         .glitch-title {
-            font-size: 32px; font-weight: 700; letter-spacing: 8px;
-            position: relative; color: #fff;
-            animation: glitch-skew 4s infinite linear alternate-reverse;
+            font-size: 48px; /* Массивный размер */
+            font-weight: 900; /* Максимальная жирность */
+            letter-spacing: -2px; /* Плотная посадка для агрессии */
+            color: #fff;
+            position: relative;
+            margin: 0;
+            padding: 0 10px;
+            /* Основная анимация реби и растяжения */
+            animation: glitch-stretch 5s infinite ease-in-out;
         }
 
-        .glitch-title::before, .glitch-title::after {
-            content: 'DALI ESSENCE'; position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.8;
+        /* Псевдоэлементы для создания эффекта пиксельных шлейфов */
+        .glitch-title::before,
+        .glitch-title::after {
+            content: 'DALI ESSENCE';
+            position: absolute;
+            top: 0; left: 10px;
+            width: 100%; height: 100%;
+            background: #000; /* Чтобы перекрывать основной текст */
+            overflow: hidden;
         }
 
-        .glitch-title::before { color: var(--gold); animation: glitch-anim 2s infinite linear alternate-reverse; z-index: -1; }
-        .glitch-title::after { color: #555; animation: glitch-anim-2 3s infinite linear alternate-reverse; z-index: -2; }
-
-        @keyframes glitch-anim {
-            0% { clip-path: inset(50% 0 30% 0); transform: translate(-2px, 2px); }
-            20% { clip-path: inset(10% 0 80% 0); transform: translate(2px, -2px); }
-            100% { clip-path: inset(40% 0 43% 0); transform: translate(-2px, 2px); }
+        /* Верхний шлейф (Золотой) */
+        .glitch-title::before {
+            color: var(--gold);
+            z-index: -1;
+            /* Растяжение вверх + реби */
+            animation: glitch-up 3s infinite linear alternate-reverse;
+            filter: blur(1px); /* Легкое размытие шлейфа */
         }
 
-        @keyframes glitch-anim-2 {
-            0% { clip-path: inset(15% 0 15% 0); transform: translate(2px, -2px); }
-            50% { clip-path: inset(80% 0 5% 0); transform: translate(-2px, 2px); }
-            100% { clip-path: inset(20% 0 60% 0); transform: translate(2px, -2px); }
+        /* Нижний шлейф (Серый) */
+        .glitch-title::after {
+            color: #444;
+            z-index: -2;
+            /* Растяжение вниз + реби */
+            animation: glitch-down 2s infinite linear alternate-reverse;
+            filter: blur(2px);
         }
 
-        @keyframes glitch-skew {
-            0% { transform: skew(0deg); }
-            10% { transform: skew(3deg); }
-            15% { transform: skew(-2deg); }
-            20% { transform: skew(0deg); }
-            100% { transform: skew(0deg); }
+        /* АНИМАЦИИ ВЕРТИКАЛЬНОГО РАСТЯЖЕНИЯ ПО ПИКСЕЛЯМ */
+        
+        /* 1. Общее легкое "дрожание" основного текста */
+        @keyframes glitch-stretch {
+            0%, 100% { transform: scaleY(1); }
+            5px { transform: scaleY(1.02) translateY(-1px); }
+            10px { transform: scaleY(0.98) translateY(1px); }
+            15px { transform: scaleY(1); }
         }
 
-        /* STATUS BADGE */
-        .status-badge { 
-            position: absolute; top: 20px; right: 20px;
-            display: flex; align-items: center; gap: 8px; 
-            background: rgba(255,255,255,0.03); padding: 8px 14px; 
-            border-radius: 30px; border: 1px solid rgba(0,255,0,0.2);
-            backdrop-filter: blur(10px); z-index: 20;
+        /* 2. Золотой шлейф ВВЕРХ (пиксельное реби) */
+        @keyframes glitch-up {
+            0% { clip-path: inset(0 0 90% 0); transform: translateY(0); }
+            5% { clip-path: inset(0 0 30% 0); transform: translateY(-15px) scaleY(2); opacity: 0.8; }
+            10% { clip-path: inset(0 0 80% 0); transform: translateY(-5px) scaleY(1.2); opacity: 0.5; }
+            15% { clip-path: inset(0 0 95% 0); transform: translateY(0); opacity: 0.2; }
+            100% { clip-path: inset(0 0 90% 0); transform: translateY(0); }
         }
-        .dot { width: 5px; height: 5px; background: #00ff00; border-radius: 50%; box-shadow: 0 0 10px #00ff00; }
+
+        /* 3. Серый шлейф ВНИЗ (пиксельное реби) */
+        @keyframes glitch-down {
+            0% { clip-path: inset(90% 0 0 0); transform: translateY(0); }
+            7% { clip-path: inset(20% 0 0 0); transform: translateY(20px) scaleY(2.5); opacity: 0.7; }
+            12% { clip-path: inset(70% 0 0 0); transform: translateY(8px) scaleY(1.5); opacity: 0.4; }
+            18% { clip-path: inset(95% 0 0 0); transform: translateY(0); opacity: 0.1; }
+            100% { clip-path: inset(90% 0 0 0); transform: translateY(0); }
+        }
 
         /* NAV (БЕЗ ИЗМЕНЕНИЙ) */
-        .nav { position: fixed; bottom: 20px; left: 15px; right: 15px; height: 70px; background: rgba(10,10,10,0.6); backdrop-filter: blur(25px); display: flex; justify-content: space-around; align-items: center; border-radius: 25px; border: 1px solid rgba(255,255,255,0.08); z-index: 1000; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: #444; font-size: 8px; font-weight: 800; }
+        .nav { position: fixed; bottom: 20px; left: 15px; right: 15px; height: 75px; background: rgba(10,10,10,0.7); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; border-radius: 25px; border: 1px solid rgba(255,255,255,0.06); z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #333; font-size: 8px; font-weight: 800; letter-spacing: 1px; }
         .nav-item.active { color: #fff; }
+        .nav-icon { font-size: 18px; margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -94,37 +126,48 @@
         <div class="noise"></div>
     </div>
 
-    <div class="status-badge">
-        <div class="dot"></div>
-        <span style="font-size: 8px; color: #00ff00; font-weight: 900; letter-spacing: 1px;">CONNECTED</span>
-    </div>
-
     <div class="hero-container">
-        <div class="glitch-title">DALI ESSENCE</div>
-        <p style="font-size: 8px; color: #555; margin-top: 20px; letter-spacing: 4px;">SYSTEM PROTOCOL v1.0</p>
+        <div class="glitch-wrapper">
+            <h1 class="glitch-title">DALI ESSENCE</h1>
+        </div>
+        <p style="font-size: 8px; color: #444; margin-top: 30px; letter-spacing: 5px; font-weight: 400;">SYSTEM PROTOCOL v1.0</p>
     </div>
 
     <nav class="nav">
-        <div class="nav-item active">🏠 HOME</div>
-        <div class="nav-item">🛍️ SHOP</div>
-        <div class="nav-item">🛒 BAG</div>
-        <div class="nav-item">👤 ID</div>
+        <div class="nav-item active"><span class="nav-icon">🏠</span>HOME</div>
+        <div class="nav-item"><span class="nav-icon">🛍️</span>SHOP</div>
+        <div class="nav-item"><span class="nav-icon">🛒</span>BAG</div>
+        <div class="nav-item"><span class="nav-icon">👤</span>ID</div>
     </nav>
 </div>
 
 <script>
     let tg = window.Telegram.WebApp;
     tg.expand();
+    tg.headerColor = '#000000';
+
     const s1 = document.getElementById('s1');
     const s2 = document.getElementById('s2');
 
-    // Тот самый плавный параллакс
+    // Плавный параллакс фона при движении пальца (для десктопа мышки)
     document.addEventListener('mousemove', (e) => {
         const x = e.clientX / window.innerWidth;
         const y = e.clientY / window.innerHeight;
         requestAnimationFrame(() => {
-            s1.style.transform = `translate3d(${x * 30}px, ${y * 30}px, 0)`;
-            s2.style.transform = `translate3d(${-x * 50}px, ${-y * 50}px, 0)`;
+            // Увеличил амплитуду параллакса для глубины
+            s1.style.transform = `translate3d(${x * 40}px, ${y * 40}px, 0)`;
+            s2.style.transform = `translate3d(${-x * 60}px, ${-y * 60}px, 0)`;
+        });
+    });
+
+    // Для тач-скринов (мобильный параллакс при движении пальцем)
+    document.addEventListener('touchmove', (e) => {
+        const touch = e.touches[0];
+        const x = touch.clientX / window.innerWidth;
+        const y = touch.clientY / window.innerHeight;
+        requestAnimationFrame(() => {
+            s1.style.transform = `translate3d(${x * 40}px, ${y * 40}px, 0)`;
+            s2.style.transform = `translate3d(${-x * 60}px, ${-y * 60}px, 0)`;
         });
     });
 </script>
