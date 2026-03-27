@@ -1,220 +1,48 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DALI SYSTEM — LUXURY DROP</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
-    <style>
-        :root { --accent: #fff; --bg: #000; --card: #0c0c0c; --dim: #555; --gold: #d4af37; --glass: rgba(255,255,255,0.03); }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body { 
-            margin: 0; background: var(--bg); color: var(--accent); 
-            font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh;
-            text-transform: uppercase;
-        }
-
-        #app { height: 100vh; display: flex; flex-direction: column; }
-        .view { 
-            flex: 1; overflow-y: auto; display: none; 
-            padding: 20px; padding-bottom: 120px;
-            animation: fadeIn 0.4s ease-out;
-        }
-        .view.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* HEADER */
-        .header { text-align: center; padding: 20px 0; letter-spacing: 6px; position: sticky; top: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); z-index: 100; }
-        .header h1 { font-size: 14px; margin: 0; font-weight: 900; }
-
-        /* HOME SCREEN ELEMENTS */
-        .hero-box { height: 300px; background: linear-gradient(0deg, #000 0%, transparent 100%), #111; border-radius: 20px; margin-bottom: 20px; display: flex; flex-direction: column; justify-content: flex-end; padding: 25px; position: relative; overflow: hidden; }
-        .hero-box::after { content: 'EST. 2024'; position: absolute; top: 20px; left: 20px; font-size: 10px; color: var(--gold); letter-spacing: 2px; }
-        .hero-title { font-size: 32px; font-weight: 900; line-height: 1; margin: 0; z-index: 2; }
-        
-        .bento-info { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .bento-item { background: var(--card); border-radius: 15px; padding: 15px; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
-        .bento-item:active { transform: scale(0.97); background: #151515; }
-        .bento-item span { display: block; font-size: 8px; color: var(--dim); margin-bottom: 8px; letter-spacing: 1px; }
-        .bento-item p { margin: 0; font-size: 11px; font-weight: 700; line-height: 1.4; }
-
-        /* SHOP */
-        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .p-card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.03); }
-        .p-img { width: 100%; aspect-ratio: 1/1; background: #111; position: relative; }
-        .p-img::after { content: 'DALI'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #1a1a1a; font-weight: 900; font-size: 10px; }
-        .p-info { padding: 12px; }
-        .p-price { color: var(--gold); font-weight: 700; font-size: 11px; margin-bottom: 10px; }
-        .btn-add { width: 100%; border: 1px solid #222; background: transparent; color: #fff; padding: 10px; font-size: 9px; font-weight: 900; border-radius: 6px; }
-
-        /* PROFILE */
-        .profile-card { background: var(--glass); border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
-        .user-avatar { width: 60px; height: 60px; background: #111; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--gold); font-size: 24px; }
-        .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 18px; background: var(--card); border-radius: 12px; margin-bottom: 8px; font-size: 11px; font-weight: 700; }
-        .menu-item span:last-child { color: var(--dim); }
-
-        /* NAV */
-        .nav { position: fixed; bottom: 20px; left: 15px; right: 15px; height: 75px; background: rgba(10,10,10,0.85); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; border-radius: 25px; border: 1px solid rgba(255,255,255,0.05); z-index: 1000; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--dim); font-size: 8px; font-weight: 700; transition: 0.3s; position: relative; }
-        .nav-item.active { color: #fff; }
-        .nav-icon { font-size: 20px; margin-bottom: 5px; }
-        .cart-dot { position: absolute; top: 0; right: -5px; width: 6px; height: 6px; background: var(--gold); border-radius: 50%; display: none; }
-    </style>
-</head>
-<body>
-
-<div id="app">
-    <div class="header"><h1>DALI SYSTEM</h1></div>
-
-    <div id="view-home" class="view active">
-        <div class="hero-box">
-            <h2 class="hero-title">WE ARE<br>DALI STORE</h2>
+<div id="view-home" class="view active">
+    
+    <div class="hero-box" style="background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, #000 100%), url('ТВОЕ_ФОТО_ИЛИ_ВИДЕО'); background-size: cover;">
+        <div style="position: absolute; top: 20px; right: 20px; display: flex; align-items: center; gap: 5px;">
+            <div style="width: 6px; height: 6px; background: #00ff00; border-radius: 50%; box-shadow: 0 0 10px #00ff00;"></div>
+            <span style="font-size: 8px; letter-spacing: 1px; color: #00ff00;">SYSTEM ONLINE</span>
         </div>
-        
-        <div class="bento-info">
-            <div class="bento-item">
-                <span>ОПЫТ РАБОТЫ</span>
-                <p>2+ ГОДА В ИНДУСТРИИ</p>
-            </div>
-            <div class="bento-item">
-                <span>ДОВЕРИЕ</span>
-                <p>800+ СЧАСТЛИВЫХ КЛИЕНТОВ</p>
-            </div>
-            <div class="bento-item" style="grid-column: span 2; border-color: rgba(212, 175, 55, 0.3);">
-                <span>СПЕЦИАЛИЗАЦИЯ</span>
-                <p style="color: var(--gold);">ТОЛЬКО ТОПОВЫЕ БРЕНДЫ И ШМОТКИ БЕЗ НАКРУТКИ ЦЕНЫ</p>
-            </div>
-        </div>
-
-        <button onclick="switchView('shop', document.querySelectorAll('.nav-item')[1])" style="width: 100%; padding: 20px; background: #fff; border: none; border-radius: 15px; font-weight: 900; font-size: 11px;">ПЕРЕЙТИ К ПОКУПКАМ</button>
+        <h2 class="hero-title" style="letter-spacing: -1px;">BEYOND<br>THE LIMITS</h2>
+        <p style="font-size: 9px; color: var(--dim); margin-top: 10px; letter-spacing: 2px;">DALI STORE — OFFICIAL ACCESS</p>
     </div>
 
-    <div id="view-shop" class="view">
-        <div style="margin-bottom: 20px;">
-            <h2 style="font-weight: 900; font-size: 20px;">КАТАЛОГ</h2>
-            <div style="display: flex; gap: 10px; overflow-x: auto; padding: 10px 0;">
-                <div style="padding: 8px 15px; background: #fff; color: #000; border-radius: 20px; font-size: 9px; font-weight: 900;">ВСЕ</div>
-                <div style="padding: 8px 15px; background: #111; border-radius: 20px; font-size: 9px; font-weight: 900;">РЮКЗАКИ</div>
-                <div style="padding: 8px 15px; background: #111; border-radius: 20px; font-size: 9px; font-weight: 900;">АКСЕССУАРЫ</div>
-            </div>
+    <div class="bento-info">
+        <div class="bento-item">
+            <span>SINCE</span>
+            <p>2024 / EST.</p>
         </div>
-        <div class="product-grid" id="product-list"></div>
-    </div>
-
-    <div id="view-cart" class="view">
-        <h2 style="font-weight: 900; margin-bottom: 25px;">BAG</h2>
-        <div id="cart-content"></div>
-        <div id="cart-empty" style="text-align:center; margin-top:100px; color:var(--dim); font-size: 10px;">BAG IS EMPTY</div>
-        <div id="cart-summary" style="display:none; margin-top:30px;">
-            <div style="display:flex; justify-content:space-between; padding:20px 0; border-top:1px solid #111; font-weight:900;">
-                <span>TOTAL</span><span id="total-amount">0 ₽</span>
-            </div>
-            <button onclick="checkout()" style="width: 100%; padding: 20px; background: #fff; color: #000; border: none; border-radius: 12px; font-weight: 900;">ОФОРМИТЬ ЗАКАЗ</button>
+        <div class="bento-item">
+            <span>CLIENTS</span>
+            <p>800+ MEMBERS</p>
+        </div>
+        <div class="bento-item" style="grid-column: span 2; background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.2);">
+            <span>PHILOSOPHY</span>
+            <p style="color: var(--gold); font-size: 10px;">ТОЛЬКО ТОПОВЫЕ БРЕНДЫ. ЧЕСТНАЯ ЦЕНА. БЕЗ НАКРУТОК.</p>
         </div>
     </div>
 
-    <div id="view-profile" class="view">
-        <div class="profile-card">
-            <div class="user-avatar" id="avatar">👤</div>
-            <h2 id="user-name" style="margin: 0; font-size: 16px;">DALI MEMBER</h2>
-            <p style="font-size: 8px; color: var(--gold); margin-top: 5px; letter-spacing: 2px;">LVL 1 VERIFIED</p>
+    <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 25px;">
+        <div style="padding: 15px; background: var(--glass); border-radius: 12px; border: 1px solid rgba(255,255,255,0.03); display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 20px;">🛡️</span>
+            <div>
+                <div style="font-size: 10px; font-weight: 900;">100% QUALITY CONTROL</div>
+                <div style="font-size: 8px; color: var(--dim);">КАЖДАЯ ВЕЩЬ ПРОВЕРЯЕТСЯ ЛИЧНО</div>
+            </div>
         </div>
-
-        <div class="menu-item"><span>💰 МОИ ПОКУПКИ</span><span id="order-count">0</span></div>
-        <div class="menu-item"><span>🔥 СКИДКИ</span><span>5% GENESIS</span></div>
-        <div class="menu-item"><span>🕒 ИСТОРИЯ</span><span>EMPTY</span></div>
-        <div class="menu-item"><span>📱 ДАННЫЕ</span><span id="user-id">ID: 0000</span></div>
-        
-        <button onclick="tg.close()" style="width:100%; margin-top:20px; padding:15px; background:transparent; border:1px solid #222; color:#555; border-radius:12px; font-size:9px; font-weight:900;">ВЫЙТИ</button>
+        <div style="padding: 15px; background: var(--glass); border-radius: 12px; border: 1px solid rgba(255,255,255,0.03); display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 20px;">📦</span>
+            <div>
+                <div style="font-size: 10px; font-weight: 900;">FAST WORLDWIDE SHIPPING</div>
+                <div style="font-size: 8px; color: var(--dim);">ОТПРАВКА В ДЕНЬ ЗАКАЗА</div>
+            </div>
+        </div>
     </div>
 
-    <nav class="nav">
-        <div class="nav-item active" onclick="switchView('home', this)"><span class="nav-icon">🏠</span>HOME</div>
-        <div class="nav-item" onclick="switchView('shop', this)"><span class="nav-icon">🛍️</span>SHOP</div>
-        <div class="nav-item" onclick="switchView('cart', this)"><span id="dot" class="cart-dot"></span><span class="nav-icon">🛒</span>BAG</div>
-        <div class="nav-item" onclick="switchView('profile', this)"><span class="nav-icon">👤</span>ID</div>
-    </nav>
+    <button onclick="switchView('shop', document.querySelectorAll('.nav-item')[1])" class="main-btn-active" style="width: 100%; padding: 22px; background: #fff; color: #000; border: none; border-radius: 18px; font-weight: 900; font-size: 12px; letter-spacing: 1px; box-shadow: 0 10px 20px rgba(255,255,255,0.1);">
+        ENTER THE CATALOG
+    </button>
+
 </div>
-
-<script>
-    let tg = window.Telegram.WebApp;
-    tg.expand();
-    tg.headerColor = '#000000';
-
-    const products = [
-        { id: 1, title: 'ONE-THE BACKPACK BLACK', price: 1990 },
-        { id: 2, title: 'ONE-THE BACKPACK GREY', price: 1990 },
-        { id: 3, title: 'DALI VISION GLASSES', price: 3500 },
-        { id: 4, title: 'DALI SIGNATURE TEE', price: 2900 }
-    ];
-
-    let cart = [];
-
-    function renderShop() {
-        document.getElementById('product-list').innerHTML = products.map(p => `
-            <div class="p-card">
-                <div class="p-img"></div>
-                <div class="p-info">
-                    <div style="font-size:9px; font-weight:700; margin-bottom:5px; height:22px;">${p.title}</div>
-                    <div class="p-price">${p.price} ₽</div>
-                    <button class="btn-add" onclick="addToBag(${p.id})">ADD</button>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    function switchView(viewId, el) {
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-        document.getElementById(`view-${viewId}`).classList.add('active');
-        el.classList.add('active');
-        tg.HapticFeedback.selectionChanged();
-    }
-
-    function addToBag(id) {
-        const p = products.find(x => x.id === id);
-        cart.push(p);
-        updateCart();
-        tg.HapticFeedback.notificationOccurred('success');
-    }
-
-    function updateCart() {
-        const dot = document.getElementById('dot');
-        const content = document.getElementById('cart-content');
-        dot.style.display = cart.length > 0 ? 'block' : 'none';
-        
-        if(cart.length > 0) {
-            document.getElementById('cart-empty').style.display = 'none';
-            document.getElementById('cart-summary').style.display = 'block';
-            content.innerHTML = cart.map((item, idx) => `
-                <div style="display:flex; justify-content:space-between; padding:15px 0; border-bottom:1px solid #111; font-size:10px;">
-                    <span>${item.title}</span>
-                    <span style="color:var(--gold);">${item.price} ₽</span>
-                </div>
-            `).join('');
-            document.getElementById('total-amount').innerText = cart.reduce((a,b)=>a+b.price,0) + ' ₽';
-        }
-    }
-
-    function checkout() {
-        tg.showConfirm("ПОДТВЕРДИТЬ ОФОРМЛЕНИЕ?", (ok) => {
-            if(ok) {
-                tg.showAlert("ЗАКАЗ ПРИНЯТ");
-                cart = [];
-                updateCart();
-                switchView('home', document.querySelectorAll('.nav-item')[0]);
-            }
-        });
-    }
-
-    if(tg.initDataUnsafe.user) {
-        document.getElementById('user-name').innerText = tg.initDataUnsafe.user.first_name.toUpperCase();
-        document.getElementById('user-id').innerText = 'ID: ' + tg.initDataUnsafe.user.id;
-    }
-
-    renderShop();
-</script>
-</body>
-</html>
