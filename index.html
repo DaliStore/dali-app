@@ -13,88 +13,92 @@
         body { 
             margin: 0; background: var(--bg); color: #fff; 
             font-family: 'Montserrat', sans-serif; overflow: hidden; height: 100vh;
+            user-select: none;
         }
 
-        /* ТВОЙ ЖИВОЙ ФОН (БЕЗ ЧЕРНЫХ ПЯТЕН) */
+        /* ЖИВОЙ ФОН */
         .main-background {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 0; overflow: hidden;
+            z-index: 0; overflow: hidden; pointer-events: none;
         }
         .gradient-sphere {
-            position: absolute; width: 150vw; height: 150vw; border-radius: 50%;
-            filter: blur(80px); opacity: 0.15; z-index: 1;
+            position: absolute; width: 140vw; height: 140vw; border-radius: 50%;
+            filter: blur(80px); opacity: 0.12; z-index: 1;
             background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
-            animation: move 15s infinite alternate ease-in-out;
+            animation: slowMove 20s infinite alternate ease-in-out;
         }
-        @keyframes move { from { transform: translate(-20%, -20%); } to { transform: translate(10%, 10%); } }
+        @keyframes slowMove { from { transform: translate(-20%, -10%); } to { transform: translate(10%, 15%); } }
 
-        /* ЦЕНТРАЛЬНЫЙ БЛОК */
+        /* ЭФФЕКТ КАСАНИЯ (РИППЛ) */
+        .touch-hint {
+            position: absolute; width: 50px; height: 50px;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 50%; pointer-events: none;
+            opacity: 0; z-index: 50;
+        }
+        @keyframes hint-anim {
+            0% { transform: scale(0.5); opacity: 0.8; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        /* КОНТЕНТ */
         .hero {
             position: relative; z-index: 10;
             display: flex; flex-direction: column; align-items: center;
-            justify-content: flex-start; padding-top: 15vh;
-            height: 100vh;
+            justify-content: flex-start; padding-top: 18vh;
+            height: 100vh; width: 100%;
         }
 
-        /* НОВЫЙ МОЩНЫЙ ГЛИТЧ */
+        /* РЕДКИЙ ГЛИТЧ НА МАССИВНОМ ШРИФТЕ */
         .dali-title {
-            font-size: 42px; /* Больше и мощнее */
-            font-weight: 900;
-            letter-spacing: -1px;
-            position: relative;
-            color: #fff;
-            text-align: center;
-            /* Убираем любые фоны, оставляем чистый текст */
+            font-size: 38px; font-weight: 900; letter-spacing: -1px;
+            position: relative; color: #fff; text-align: center;
             background: none;
         }
 
+        /* Слои для редкого глитча */
         .dali-title::before, .dali-title::after {
             content: 'DALI ESSENCE';
             position: absolute; top: 0; left: 0; width: 100%;
-            opacity: 0.7;
+            opacity: 0; /* Скрыты по умолчанию */
         }
 
-        /* Эффект расслоения (RGB Shift) без черного фона */
+        /* Анимация: глитч срабатывает редко (пауза 5 сек, всплеск 0.2 сек) */
         .dali-title::before {
-            color: #ff003c;
-            z-index: -1;
-            animation: glitch-v2 0.4s cubic-bezier(.25, .46, .45, .94) both infinite;
+            color: #ff003c; z-index: -1;
+            animation: rare-glitch 6s infinite;
         }
-
         .dali-title::after {
-            color: #00f0ff;
-            z-index: -2;
-            animation: glitch-v2 0.4s cubic-bezier(.25, .46, .45, .94) reverse both infinite;
+            color: #00f0ff; z-index: -2;
+            animation: rare-glitch 6s infinite 0.1s;
         }
 
-        @keyframes glitch-v2 {
-            0% { transform: translate(0); }
-            20% { transform: translate(-3px, 2px); }
-            40% { transform: translate(-3px, -2px); }
-            60% { transform: translate(3px, 2px); }
-            80% { transform: translate(3px, -2px); }
-            100% { transform: translate(0); }
+        @keyframes rare-glitch {
+            0%, 94%, 100% { opacity: 0; transform: translate(0); }
+            95% { opacity: 0.8; transform: translate(-5px, 2px); clip-path: inset(10% 0 40% 0); }
+            97% { opacity: 0.8; transform: translate(5px, -2px); clip-path: inset(50% 0 10% 0); }
+            99% { opacity: 0.5; transform: translate(-2px, 3px); }
         }
 
         .protocol {
-            font-size: 9px; color: var(--gold);
-            letter-spacing: 4px; margin-top: 20px;
-            opacity: 0.6; font-weight: 400;
+            font-size: 8px; color: var(--gold);
+            letter-spacing: 5px; margin-top: 15px;
+            opacity: 0.5; font-weight: 400;
         }
 
         /* МИНИ-ВКЛАДКИ */
         .nav { 
             position: fixed; bottom: 30px; left: 10%; right: 10%;
-            height: 55px; background: rgba(255,255,255,0.03);
-            backdrop-filter: blur(15px); border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.05);
+            height: 60px; background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(20px); border-radius: 25px;
+            border: 1px solid rgba(255,255,255,0.06);
             display: flex; justify-content: space-around; align-items: center;
         }
-        .nav-item { font-size: 8px; color: #555; font-weight: 700; display: flex; flex-direction: column; align-items: center; }
+        .nav-item { font-size: 7px; color: #444; font-weight: 800; letter-spacing: 1px; }
         .nav-item.active { color: #fff; }
     </style>
 </head>
-<body>
+<body ontouchstart="handleTouch(event)">
 
 <div class="main-background">
     <div class="gradient-sphere"></div>
@@ -115,7 +119,23 @@
 <script>
     let tg = window.Telegram.WebApp;
     tg.expand();
-    tg.headerColor = '#000000';
+
+    // Функция отклика на нажатие
+    function handleTouch(e) {
+        const touch = e.touches[0];
+        const hint = document.createElement('div');
+        hint.className = 'touch-hint';
+        hint.style.left = `${touch.clientX - 25}px`;
+        hint.style.top = `${touch.clientY - 25}px`;
+        hint.style.animation = 'hint-anim 0.5s ease-out forwards';
+        
+        document.body.appendChild(hint);
+        
+        // Вибрация Telegram
+        tg.HapticFeedback.impactOccurred('light');
+
+        setTimeout(() => hint.remove(), 500);
+    }
 </script>
 </body>
 </html>
