@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DALI SYSTEM — BEAST MODE</title>
+    <title>DALI STORE — OFFICIAL APP</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #fff; --bg: #000; --card: #0a0a0a; --dim: #555; --gold: #d4af37; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        :root { --accent: #fff; --bg: #000; --card: #0a0a0a; --dim: #555; --gold: #d4af37; --glass: rgba(255,255,255,0.03); }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
             margin: 0; background: var(--bg); color: var(--accent); 
@@ -18,72 +18,58 @@
 
         #app { height: 100vh; display: flex; flex-direction: column; }
         
-        /* КОНТЕНТНАЯ ЧАСТЬ */
         .view { 
             flex: 1; overflow-y: auto; display: none; 
-            padding: 20px; padding-bottom: 100px;
-            animation: fadeIn 0.2s ease;
+            padding: 20px; padding-bottom: 120px;
+            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .view.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* HEADER */
-        .header { text-align: center; padding: 25px 0; letter-spacing: 5px; border-bottom: 1px solid #111; }
-        .header h1 { font-size: 14px; margin: 0; font-weight: 900; }
+        .header { text-align: center; padding: 25px 0; letter-spacing: 8px; position: sticky; top: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 100; }
+        .header h1 { font-size: 16px; margin: 0; font-weight: 900; background: linear-gradient(180deg, #fff 0%, #444 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* МАГАЗИН - СЕТКА ТОВАРОВ */
-        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .p-card { background: var(--card); border-radius: 4px; overflow: hidden; border: 1px solid #111; }
-        .p-img { width: 100%; aspect-ratio: 1/1; background: #111; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .p-img::after { content: 'DALI'; color: #1a1a1a; font-weight: 900; font-size: 30px; letter-spacing: 10px; }
-        .p-info { padding: 12px; }
-        .p-title { font-size: 10px; font-weight: 700; margin-bottom: 5px; height: 25px; line-height: 1.2; overflow: hidden; }
-        .p-price { font-size: 12px; color: var(--dim); margin-bottom: 12px; font-weight: 300; }
-        .p-add { 
-            width: 100%; border: 1px solid #333; background: transparent; 
-            color: #fff; padding: 12px; font-size: 9px; font-weight: 900;
-            cursor: pointer; transition: 0.2s;
+        /* SHOP SECTION */
+        .promo-banner { 
+            height: 200px; background: #111; border-radius: 15px; margin-bottom: 30px; 
+            display: flex; flex-direction: column; justify-content: center; padding: 30px;
+            border: 1px solid rgba(255,255,255,0.05); position: relative; overflow: hidden;
         }
-        .p-add:active { background: #fff; color: #000; }
+        .promo-banner::after { content: ''; position: absolute; right: -20px; bottom: -20px; width: 120px; height: 120px; background: var(--gold); filter: blur(80px); opacity: 0.2; }
 
-        /* КОРЗИНА */
-        .cart-item { 
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 0; border-bottom: 1px solid #111;
-        }
-        .cart-total { margin-top: 30px; border-top: 1px solid #333; padding-top: 20px; }
-        .btn-order { 
-            width: 100%; background: #fff; color: #000; border: none; 
-            padding: 20px; font-weight: 900; font-size: 12px; border-radius: 2px;
-        }
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .p-card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.03); }
+        .p-img { width: 100%; aspect-ratio: 1/1; background: #0f0f0f; position: relative; border-bottom: 1px solid #111; }
+        .p-img::before { content: 'DALI'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #1a1a1a; font-weight: 900; letter-spacing: 3px; font-size: 10px; }
+        .p-info { padding: 15px; }
+        .p-title { font-size: 9px; font-weight: 700; margin-bottom: 6px; letter-spacing: 0.5px; height: 22px; overflow: hidden; }
+        .p-price { font-size: 11px; color: var(--gold); font-weight: 700; margin-bottom: 12px; }
+        .p-add { width: 100%; border: 1px solid #222; background: transparent; color: #fff; padding: 12px; font-size: 9px; font-weight: 900; border-radius: 6px; }
+        .p-add:active { background: #fff; color: #000; transform: scale(0.95); }
 
-        /* ПРОФИЛЬ / ID */
-        .id-card { background: var(--card); padding: 25px; border-radius: 4px; border: 1px solid #111; margin-bottom: 10px; }
-        .id-label { font-size: 8px; color: var(--dim); letter-spacing: 2px; margin-bottom: 8px; }
-        .id-val { font-size: 16px; font-weight: 700; letter-spacing: 1px; }
+        /* CART */
+        .cart-item { display: flex; gap: 15px; padding: 20px 0; border-bottom: 1px solid #111; align-items: center; }
+        .cart-item-img { width: 60px; height: 60px; background: #111; border-radius: 8px; }
+        .btn-checkout { width: 100%; background: #fff; color: #000; border: none; padding: 22px; font-weight: 900; border-radius: 12px; margin-top: 30px; letter-spacing: 2px; }
 
-        /* НАВИГАЦИЯ */
+        /* PROFILE/INFO */
+        .info-block { background: var(--glass); border: 1px solid rgba(255,255,255,0.05); padding: 25px; border-radius: 20px; margin-bottom: 15px; }
+        .info-title { font-size: 10px; color: var(--dim); letter-spacing: 2px; margin-bottom: 10px; }
+        .info-text { font-size: 13px; line-height: 1.6; font-weight: 300; text-transform: none; }
+
+        /* NAV */
         .nav { 
-            position: fixed; bottom: 0; width: 100%; height: 75px;
-            background: rgba(0,0,0,0.95); backdrop-filter: blur(10px);
-            display: flex; border-top: 1px solid #111; z-index: 1000;
+            position: fixed; bottom: 25px; left: 20px; right: 20px; height: 75px;
+            background: rgba(10,10,10,0.8); backdrop-filter: blur(20px);
+            display: flex; justify-content: space-around; align-items: center;
+            border: 1px solid rgba(255,255,255,0.08); border-radius: 25px; z-index: 1000;
         }
-        .nav-item { 
-            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: var(--dim); text-decoration: none; font-size: 8px; font-weight: 900;
-            position: relative; transition: 0.2s;
-        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--dim); font-size: 8px; font-weight: 700; letter-spacing: 1px; transition: 0.3s; }
         .nav-item.active { color: #fff; }
-        .nav-item.active::after { content: ''; position: absolute; top: 0; width: 30px; height: 2px; background: #fff; }
-        .nav-icon { font-size: 18px; margin-bottom: 5px; }
-
-        .badge {
-            position: absolute; top: 15px; right: 25%;
-            background: var(--gold); color: #000;
-            font-size: 9px; font-weight: 900;
-            min-width: 14px; height: 14px; border-radius: 7px;
-            display: none; align-items: center; justify-content: center;
-        }
+        .nav-icon { font-size: 22px; margin-bottom: 6px; filter: grayscale(1); transition: 0.3s; }
+        .nav-item.active .nav-icon { filter: grayscale(0); transform: translateY(-2px); }
+        .badge { position: absolute; top: 12px; right: 22%; background: var(--gold); color: #000; font-size: 9px; padding: 2px 5px; border-radius: 6px; min-width: 15px; text-align: center; }
     </style>
 </head>
 <body>
@@ -91,59 +77,62 @@
 <div id="app">
     <div class="header"><h1>DALI STORE</h1></div>
 
-    <div id="shop" class="view active">
-        <div style="margin-bottom: 30px;">
-            <h2 style="font-size: 32px; font-weight: 900; margin: 0; letter-spacing: -1px;">SHOP</h2>
-            <p style="font-size: 8px; color: var(--dim); letter-spacing: 3px;">SELECTED GOODS ONLY</p>
+    <div id="view-shop" class="view active">
+        <div class="promo-banner">
+            <span style="font-size: 10px; color: var(--gold); letter-spacing: 3px;">NEW SEASON</span>
+            <h2 style="font-size: 28px; font-weight: 900; margin: 5px 0;">ESSENTIALS</h2>
+            <p style="font-size: 9px; color: var(--dim);">QUALITY BEYOND LIMITS</p>
         </div>
-        <div class="product-grid" id="product-container"></div>
-    </div>
-
-    <div id="cart" class="view">
-        <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 30px;">BAG</h2>
-        <div id="cart-list"></div>
-        <div id="empty-msg" style="text-align: center; color: var(--dim); margin-top: 50px; font-size: 10px;">BAG IS EMPTY</div>
         
-        <div id="order-section" class="cart-total" style="display: none;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                <span style="font-size: 10px; color: var(--dim);">TOTAL</span>
-                <span id="total-price" style="font-weight: 900; font-size: 18px;">0 ₽</span>
+        <div class="product-grid" id="product-list"></div>
+    </div>
+
+    <div id="view-cart" class="view">
+        <h2 style="font-size: 24px; font-weight: 900; margin-bottom: 30px;">SHOPPING BAG</h2>
+        <div id="cart-content"></div>
+        <div id="cart-empty" style="text-align: center; margin-top: 100px;">
+            <p style="color: var(--dim); font-size: 11px; letter-spacing: 2px;">YOUR BAG IS EMPTY</p>
+        </div>
+        <div id="cart-summary" style="display: none; margin-top: 40px;">
+            <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 900; border-top: 1px solid #111; padding-top: 20px;">
+                <span>TOTAL</span>
+                <span id="total-amount">0 ₽</span>
             </div>
-            <button class="btn-order" onclick="makeOrder()">COMPLETE ORDER</button>
+            <button class="btn-checkout" onclick="checkout()">CHECKOUT</button>
         </div>
     </div>
 
-    <div id="profile" class="view">
-        <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 30px;">ID</h2>
-        <div class="id-card">
-            <div class="id-label">MEMBER NAME</div>
-            <div class="id-val" id="tg-name">DALI GUEST</div>
+    <div id="view-info" class="view">
+        <h2 style="font-size: 24px; font-weight: 900; margin-bottom: 30px;">INFORMATION</h2>
+        
+        <div class="info-block">
+            <div class="info-title">О МАГАЗИНЕ</div>
+            <div class="info-text">DALI STORE — это концептуальный проект, объединяющий эстетику уличной моды и высокое качество материалов. Мы верим, что одежда — это продолжение твоей дисциплины.</div>
         </div>
-        <div class="id-card">
-            <div class="id-label">DISCIPLINE STREAK</div>
-            <div class="id-val" style="color: var(--gold);">53 DAYS IN LINE</div>
+
+        <div class="info-block">
+            <div class="info-title">ДОСТАВКА</div>
+            <div class="info-text">Отправляем заказы по всему миру. Срок обработки заказа: 24 часа. Доставка курьерскими службами СДЭК, Boxberry и Почта России.</div>
         </div>
-        <div class="id-card">
-            <div class="id-label">SMC TRADING STATUS</div>
-            <div class="id-val">MASTER OF LIQUIDITY</div>
+
+        <div class="info-block">
+            <div class="info-title">КОНТАКТЫ</div>
+            <div class="info-text">По всем вопросам сотрудничества и заказов пишите в поддержку через официальный бот.</div>
         </div>
-        <div class="id-card" style="display: flex; justify-content: space-between;">
-            <div><div class="id-label">HEIGHT</div><div class="id-val">194 CM</div></div>
-            <div style="text-align: right;"><div class="id-label">WEIGHT</div><div class="id-val">78 KG</div></div>
-        </div>
-        <button class="btn-order" style="background: transparent; border: 1px solid #111; color: #333; margin-top: 10px;" onclick="tg.close()">DISCONNECT</button>
+
+        <button class="btn-checkout" style="background: transparent; border: 1px solid #222; color: #fff;" onclick="tg.close()">ЗАКРЫТЬ</button>
     </div>
 
     <nav class="nav">
-        <div class="nav-item active" onclick="nav('shop', this)">
-            <span class="nav-icon">⬛</span>SHOP
+        <div class="nav-item active" onclick="switchView('shop', this)">
+            <span class="nav-icon">🏪</span>МАГАЗИН
         </div>
-        <div class="nav-item" onclick="nav('cart', this)">
-            <div id="cart-badge" class="badge">0</div>
-            <span class="nav-icon">⚪</span>BAG
+        <div class="nav-item" onclick="switchView('cart', this)">
+            <span id="cart-badge" class="badge" style="display: none;">0</span>
+            <span class="nav-icon">🛍️</span>КОРЗИНА
         </div>
-        <div class="nav-item" onclick="nav('profile', this)">
-            <span class="nav-icon">◼️</span>ID
+        <div class="nav-item" onclick="switchView('info', this)">
+            <span class="nav-icon">📜</span>ИНФО
         </div>
     </nav>
 </div>
@@ -155,102 +144,96 @@
     tg.backgroundColor = '#000000';
 
     const products = [
-        { id: 1, name: 'ONE-THE BACKPACK / GREY', price: 1990 },
-        { id: 2, name: 'ONE-THE BACKPACK / BLACK', price: 1990 },
-        { id: 3, name: 'DALI VISION GLASSES', price: 3500 },
-        { id: 4, name: 'TACTICAL GEAR SET', price: 8200 },
-        { id: 5, name: 'SMC PRIVATE COURSE', price: 9900 },
-        { id: 6, name: 'DISCIPLINE MASK', price: 1200 }
+        { id: 1, title: 'ONE-THE BACKPACK BLACK', price: 1990 },
+        { id: 2, title: 'ONE-THE BACKPACK GREY', price: 1990 },
+        { id: 3, title: 'DALI VISION GLASSES', price: 3500 },
+        { id: 4, title: 'OVERSIZE HOODIE DARK', price: 4500 },
+        { id: 5, title: 'TACTICAL PANTS V1', price: 5200 },
+        { id: 6, title: 'SIGNATURE T-SHIRT', price: 2500 }
     ];
 
     let cart = [];
 
-    // НАВИГАЦИЯ
-    function nav(id, el) {
+    function renderShop() {
+        const list = document.getElementById('product-list');
+        list.innerHTML = products.map(p => `
+            <div class="p-card">
+                <div class="p-img"></div>
+                <div class="p-info">
+                    <div class="p-title">${p.title}</div>
+                    <div class="p-price">${p.price} ₽</div>
+                    <button class="p-add" onclick="addToCart(${p.id})">ADD TO BAG</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function switchView(viewId, el) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        document.getElementById(`view-${viewId}`).classList.add('active');
         el.classList.add('active');
         tg.HapticFeedback.selectionChanged();
     }
 
-    // МАГАЗИН
-    const container = document.getElementById('product-container');
-    products.forEach(p => {
-        const div = document.createElement('div');
-        div.className = 'p-card';
-        div.innerHTML = `
-            <div class="p-img"></div>
-            <div class="p-info">
-                <div class="p-title">${p.name}</div>
-                <div class="p-price">${p.price} ₽</div>
-                <button class="p-add" onclick="buy(${p.id})">ADD TO BAG</button>
-            </div>
-        `;
-        container.appendChild(div);
-    });
-
-    // КОРЗИНА
-    function buy(id) {
-        const p = products.find(i => i.id === id);
-        cart.push(p);
-        updateCart();
+    function addToCart(id) {
+        const product = products.find(p => p.id === id);
+        cart.push(product);
+        updateCartUI();
         tg.HapticFeedback.notificationOccurred('success');
     }
 
-    function updateCart() {
-        const list = document.getElementById('cart-list');
+    function updateCartUI() {
+        const content = document.getElementById('cart-content');
+        const empty = document.getElementById('cart-empty');
+        const summary = document.getElementById('cart-summary');
         const badge = document.getElementById('cart-badge');
-        const empty = document.getElementById('empty-msg');
-        const orderSec = document.getElementById('order-section');
-        
-        badge.innerText = cart.length;
-        badge.style.display = cart.length > 0 ? 'flex' : 'none';
         
         if (cart.length > 0) {
             empty.style.display = 'none';
-            orderSec.style.display = 'block';
-            list.innerHTML = cart.map((item, i) => `
+            summary.style.display = 'block';
+            badge.style.display = 'block';
+            badge.innerText = cart.length;
+            
+            content.innerHTML = cart.map((item, index) => `
                 <div class="cart-item">
-                    <div>
-                        <div style="font-size: 10px; font-weight: 700;">${item.name}</div>
-                        <div style="font-size: 10px; color: var(--dim); margin-top: 4px;">${item.price} ₽</div>
+                    <div class="cart-item-img"></div>
+                    <div style="flex: 1;">
+                        <div style="font-size: 10px; font-weight: 900;">${item.title}</div>
+                        <div style="font-size: 10px; color: var(--gold); margin-top: 5px;">${item.price} ₽</div>
                     </div>
-                    <div style="font-size: 9px; color: #ff4444; font-weight: 900;" onclick="remove(${i})">DELETE</div>
+                    <div style="color: #ff4444; font-size: 18px;" onclick="removeItem(${index})">×</div>
                 </div>
             `).join('');
             
-            const total = cart.reduce((s, i) => s + i.price, 0);
-            document.getElementById('total-price').innerText = total + ' ₽';
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('total-amount').innerText = total + ' ₽';
         } else {
             empty.style.display = 'block';
-            orderSec.style.display = 'none';
-            list.innerHTML = '';
+            summary.style.display = 'none';
+            badge.style.display = 'none';
+            content.innerHTML = '';
         }
     }
 
-    function remove(i) {
-        cart.splice(i, 1);
-        updateCart();
-        tg.HapticFeedback.impactOccurred('light');
+    function removeItem(index) {
+        cart.splice(index, 1);
+        updateCartUI();
+        tg.HapticFeedback.impactOccurred('medium');
     }
 
-    function makeOrder() {
-        tg.showConfirm("READY TO DISPATCH ORDER?", (confirmed) => {
-            if (confirmed) {
-                tg.HapticFeedback.notificationOccurred('success');
-                tg.showAlert("ORDER RECEIVED. THE FOUNDER WILL CONTACT YOU.");
+    function checkout() {
+        tg.showConfirm("ПОДТВЕРДИТЬ ОФОРМЛЕНИЕ ЗАКАЗА?", (ok) => {
+            if (ok) {
+                tg.showAlert("ЗАКАЗ ПРИНЯТ. МЫ СВЯЖЕМСЯ С ВАМИ В БЛИЖАЙШЕЕ ВРЕМЯ.");
                 cart = [];
-                updateCart();
-                nav('shop', document.querySelectorAll('.nav-item')[0]);
+                updateCartUI();
+                switchView('shop', document.querySelector('.nav-item'));
             }
         });
     }
 
-    // Имя из Телеграм
-    if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-        document.getElementById('tg-name').innerText = tg.initDataUnsafe.user.first_name.toUpperCase();
-    }
+    renderShop();
 </script>
 </body>
 </html>
