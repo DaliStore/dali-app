@@ -7,7 +7,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #fff; --bg: #000; --card: #0c0c0c; --dim: #555; --gold: #d4af37; --glass: rgba(255,255,255,0.03); }
+        :root { --accent: #fff; --bg: #000; --dim: #555; --gold: #d4af37; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
@@ -18,68 +18,64 @@
 
         #app { height: 100vh; display: flex; flex-direction: column; position: relative; }
 
-        /* ЭТАП 3: ИНТЕРАКТИВНЫЙ ГРАДИЕНТ (ПАРАЛЛАКС И ТАПЫ) */
+        /* ФОН С ОПТИМИЗАЦИЕЙ */
         .main-background {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background: #000;
             z-index: 0;
             overflow: hidden;
+            pointer-events: none;
         }
 
         .gradient-sphere {
             position: absolute;
-            width: 150vw;
-            height: 150vw;
+            width: 120vw;
+            height: 120vw;
             border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.2;
+            filter: blur(60px); /* Уменьшил блюр для производительности */
+            opacity: 0.15;
             z-index: 1;
-            transition: transform 0.1s ease-out; /* Для плавного параллакса */
+            will-change: transform; /* Подсказка браузеру для плавности */
         }
 
         .sphere-1 {
             background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
-            top: -30%;
-            left: -30%;
-            animation: move-active-1 12s infinite alternate ease-in-out;
+            top: -20%; left: -20%;
         }
 
         .sphere-2 {
             background: radial-gradient(circle, #333 0%, transparent 70%);
-            bottom: -30%;
-            right: -30%;
-            animation: move-active-2 15s infinite alternate ease-in-out;
+            bottom: -20%; right: -20%;
         }
 
-        @keyframes move-active-1 { 0% { top: -30%; left: -30%; } 100% { top: -10%; left: -10%; } }
-        @keyframes move-active-2 { 0% { bottom: -30%; right: -30%; } 100% { bottom: -10%; right: -10%; } }
-
-        /* ЭФФЕКТ ТАПА (СКРЫТ ПО УМОЛЧАНИЮ) */
-        .tap-ripple {
+        /* ЛЕГКОЕ КАСАНИЕ (РИППЛ) */
+        .touch-hint {
             position: absolute;
-            width: 100px; height: 100px;
-            background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+            width: 40px; height: 40px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
             border-radius: 50%;
-            opacity: 0;
-            transform: scale(0);
             pointer-events: none;
+            opacity: 0;
             z-index: 5;
-            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+            transform: scale(1);
         }
-        .tap-ripple.active { opacity: 0.4; transform: scale(3); }
 
-        /* Зернистость */
+        @keyframes hint-anim {
+            0% { transform: scale(0.5); opacity: 0.8; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+
         .noise {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background: url('https://grainy-gradients.vercel.app/noise.svg');
-            opacity: 0.08;
-            pointer-events: none;
+            opacity: 0.05;
             z-index: 2;
-            mix-blend-mode: overlay;
+            pointer-events: none;
         }
 
+        /* КОНТЕНТ */
         .view { 
             position: relative;
             z-index: 10;
@@ -91,39 +87,34 @@
         .status-badge { 
             align-self: flex-end;
             display: flex; align-items: center; gap: 8px; 
-            background: rgba(255,255,255,0.05); padding: 10px 16px; 
-            border-radius: 30px; border: 1px solid rgba(0,255,0,0.3);
+            background: rgba(255,255,255,0.03); padding: 10px 16px; 
+            border-radius: 30px; border: 1px solid rgba(0,255,0,0.2);
             backdrop-filter: blur(10px);
-            margin-bottom: 20px;
         }
-        .dot { width: 6px; height: 6px; background: #00ff00; border-radius: 50%; box-shadow: 0 0 12px #00ff00; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.2); } }
+        .dot { width: 6px; height: 6px; background: #00ff00; border-radius: 50%; box-shadow: 0 0 10px #00ff00; }
 
         /* NAV */
-        .nav { position: fixed; bottom: 20px; left: 15px; right: 15px; height: 75px; background: rgba(10,10,10,0.6); backdrop-filter: blur(25px); display: flex; justify-content: space-around; align-items: center; border-radius: 25px; border: 1px solid rgba(255,255,255,0.08); z-index: 1000; }
+        .nav { position: fixed; bottom: 20px; left: 15px; right: 15px; height: 70px; background: rgba(10,10,10,0.6); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; border-radius: 25px; border: 1px solid rgba(255,255,255,0.05); z-index: 1000; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--dim); font-size: 8px; font-weight: 800; }
         .nav-item.active { color: #fff; }
-        .nav-icon { font-size: 20px; margin-bottom: 5px; }
+        .nav-icon { font-size: 18px; margin-bottom: 4px; }
     </style>
 </head>
-<body onscroll="handleParallax(event)">
+<body>
 
-<div id="app" ontouchstart="handleTap(event)">
+<div id="app" ontouchstart="showHint(event)">
     <div class="main-background">
-        <div class="gradient-sphere sphere-1" id="sphere1"></div>
-        <div class="gradient-sphere sphere-2" id="sphere2"></div>
-        <div class="tap-ripple" id="ripple"></div>
+        <div class="gradient-sphere sphere-1" id="s1"></div>
+        <div class="gradient-sphere sphere-2" id="s2"></div>
         <div class="noise"></div>
     </div>
 
-    <div id="view-home" class="view active" onscroll="handleParallax(event)">
+    <div id="view-home" class="view active" onscroll="syncScroll(this)">
         <div class="status-badge">
             <div class="dot"></div>
-            <span style="font-size: 9px; color: #00ff00; font-weight: 900; letter-spacing: 1px;">SYSTEM ONLINE</span>
+            <span style="font-size: 8px; color: #00ff00; font-weight: 900; letter-spacing: 1px;">SYSTEM ONLINE</span>
         </div>
-        
-        <div style="height: 200vh;"></div> 
-    </div>
+        <div style="height: 150vh;"></div> </div>
 
     <div id="view-shop" class="view"></div>
     <div id="view-cart" class="view"></div>
@@ -141,50 +132,40 @@
     let tg = window.Telegram.WebApp;
     tg.expand();
 
-    // 1. ЛОГИКА switchView (НЕПРИКАСАЕМО)
+    const s1 = document.getElementById('s1');
+    const s2 = document.getElementById('s2');
+
+    // Плавный параллакс без зависаний
+    function syncScroll(el) {
+        const top = el.scrollTop;
+        requestAnimationFrame(() => {
+            s1.style.transform = `translate3d(0, ${top * 0.2}px, 0)`;
+            s2.style.transform = `translate3d(0, ${-top * 0.1}px, 0)`;
+        });
+    }
+
+    // Легкая реакция на касание
+    function showHint(e) {
+        const touch = e.touches[0];
+        const hint = document.createElement('div');
+        hint.className = 'touch-hint';
+        hint.style.left = `${touch.clientX - 20}px`;
+        hint.style.top = `${touch.clientY - 20}px`;
+        hint.style.animation = 'hint-anim 0.5s ease-out forwards';
+        
+        document.body.appendChild(hint);
+        
+        tg.HapticFeedback.impactOccurred('light');
+
+        setTimeout(() => hint.remove(), 500);
+    }
+
     function switchView(viewId, el) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
         document.getElementById(`view-${viewId}`).classList.add('active');
         el.classList.add('active');
         tg.HapticFeedback.selectionChanged();
-    }
-
-    // 2. ЛОГИКА ПАРАЛЛАКСА ПРИ СКРОЛЛЕ
-    const s1 = document.getElementById('sphere1');
-    const s2 = document.getElementById('sphere2');
-
-    function handleParallax(e) {
-        const scrollTop = e.target.scrollTop;
-        const speed1 = 0.15; // Медленнее
-        const speed2 = 0.25; // Быстрее
-
-        // Смещаем сферы по оси Y в зависимости от скролла
-        s1.style.transform = `translateY(${scrollTop * speed1}px)`;
-        s2.style.transform = `translateY(${scrollTop * speed2}px)`;
-    }
-
-    // 3. ЛОГИКА РЕАКЦИИ НА ТАП (REACTION ON TOUCH)
-    const ripple = document.getElementById('ripple');
-
-    function handleTap(e) {
-        // Получаем координаты касания
-        const touch = e.touches[0];
-        const x = touch.clientX;
-        const y = touch.clientY;
-
-        // Позиционируем вспышку по центру тапа
-        ripple.style.left = `${x - 50}px`;
-        ripple.style.top = `${y - 50}px`;
-
-        // Активируем анимацию
-        ripple.classList.add('active');
-        tg.HapticFeedback.impactOccurred('light'); // Легкая вибрация
-
-        // Убираем вспышку после анимации
-        setTimeout(() => {
-            ripple.classList.remove('active');
-        }, 400); // 0.4s как в CSS
     }
 </script>
 </body>
