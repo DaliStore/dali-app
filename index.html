@@ -18,7 +18,7 @@
 
         #app { height: 100vh; display: flex; flex-direction: column; position: relative; }
 
-        /* ЭТАП 1: ГЛУБОКИЙ ЖИВОЙ ГРАДИЕНТ */
+        /* ЭТАП 2: АКТИВНЫЙ ЖИВОЙ ГРАДИЕНТ (ВАРИАНТ B) */
         .main-background {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -27,48 +27,50 @@
             overflow: hidden;
         }
 
-        /* Анимированные сферы градиента */
         .gradient-sphere {
             position: absolute;
-            width: 150vw;
-            height: 150vw;
+            width: 140vw;
+            height: 140vw;
             border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.15;
+            filter: blur(70px);
+            opacity: 0.22; /* Чуть ярче для динамики */
             z-index: 1;
         }
 
         .sphere-1 {
-            background: var(--gold);
-            top: -50%;
-            left: -50%;
-            animation: move-1 15s infinite alternate ease-in-out;
+            background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+            top: -30%;
+            left: -30%;
+            animation: move-active-1 8s infinite alternate ease-in-out;
         }
 
         .sphere-2 {
-            background: #333;
-            bottom: -50%;
-            right: -50%;
-            animation: move-2 12s infinite alternate ease-in-out;
+            background: radial-gradient(circle, #444 0%, transparent 70%);
+            bottom: -30%;
+            right: -30%;
+            animation: move-active-2 10s infinite alternate ease-in-out;
         }
 
-        @keyframes move-1 {
-            from { transform: translate(0, 0); }
-            to { transform: translate(20%, 30%); }
+        /* Ускоренные и более размашистые движения */
+        @keyframes move-active-1 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(25%, 35%) scale(1.1); }
         }
 
-        @keyframes move-2 {
-            from { transform: translate(0, 0); }
-            to { transform: translate(-20%, -30%); }
+        @keyframes move-active-2 {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-30%, -20%) rotate(45deg); }
         }
 
+        /* Зернистость для текстуры */
         .noise {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background: url('https://grainy-gradients.vercel.app/noise.svg');
-            opacity: 0.08;
+            opacity: 0.1;
             pointer-events: none;
             z-index: 2;
+            mix-blend-mode: overlay;
         }
 
         .view { 
@@ -81,17 +83,18 @@
 
         .status-badge { 
             align-self: flex-end;
-            display: flex; align-items: center; gap: 6px; 
-            background: rgba(0,0,0,0.5); padding: 8px 12px; 
-            border-radius: 20px; border: 1px solid rgba(0,255,0,0.2);
-            backdrop-filter: blur(5px);
+            display: flex; align-items: center; gap: 8px; 
+            background: rgba(255,255,255,0.05); padding: 10px 16px; 
+            border-radius: 30px; border: 1px solid rgba(0,255,0,0.3);
+            backdrop-filter: blur(10px);
             margin-bottom: 20px;
         }
-        .dot { width: 5px; height: 5px; background: #00ff00; border-radius: 50%; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .dot { width: 6px; height: 6px; background: #00ff00; border-radius: 50%; box-shadow: 0 0 12px #00ff00; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.2); } }
 
-        .nav { position: fixed; bottom: 20px; left: 15px; right: 15px; height: 75px; background: rgba(10,10,10,0.7); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; border-radius: 25px; border: 1px solid rgba(255,255,255,0.05); z-index: 1000; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--dim); font-size: 8px; font-weight: 700; }
+        /* NAV */
+        .nav { position: fixed; bottom: 20px; left: 15px; right: 15px; height: 75px; background: rgba(10,10,10,0.6); backdrop-filter: blur(25px); display: flex; justify-content: space-around; align-items: center; border-radius: 25px; border: 1px solid rgba(255,255,255,0.08); z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--dim); font-size: 8px; font-weight: 800; }
         .nav-item.active { color: #fff; }
         .nav-icon { font-size: 20px; margin-bottom: 5px; }
     </style>
@@ -108,7 +111,7 @@
     <div id="view-home" class="view active">
         <div class="status-badge">
             <div class="dot"></div>
-            <span style="font-size: 8px; color: #00ff00; font-weight: 900;">SYSTEM ONLINE</span>
+            <span style="font-size: 9px; color: #00ff00; font-weight: 900; letter-spacing: 1px;">SYSTEM ONLINE</span>
         </div>
     </div>
 
