@@ -30,8 +30,8 @@
         .header h1 { font-size: 14px; margin: 0; font-weight: 900; }
 
         /* HOME SCREEN ELEMENTS */
-        .hero-box { height: 350px; background: linear-gradient(0deg, #000 0%, transparent 100%), #111; border-radius: 20px; margin-bottom: 20px; display: flex; flex-direction: column; justify-content: flex-end; padding: 25px; position: relative; overflow: hidden; }
-        .hero-box::after { content: 'NEW COLLECTION'; position: absolute; top: 20px; left: 20px; font-size: 10px; color: var(--gold); letter-spacing: 2px; }
+        .hero-box { height: 300px; background: linear-gradient(0deg, #000 0%, transparent 100%), #111; border-radius: 20px; margin-bottom: 20px; display: flex; flex-direction: column; justify-content: flex-end; padding: 25px; position: relative; overflow: hidden; }
+        .hero-box::after { content: 'EST. 2024'; position: absolute; top: 20px; left: 20px; font-size: 10px; color: var(--gold); letter-spacing: 2px; }
         .hero-title { font-size: 32px; font-weight: 900; line-height: 1; margin: 0; z-index: 2; }
         
         .bento-info { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
@@ -70,22 +70,24 @@
 
     <div id="view-home" class="view active">
         <div class="hero-box">
-            <h2 class="hero-title">BEYOND<br>THE LIMITS</h2>
+            <h2 class="hero-title">WE ARE<br>DALI STORE</h2>
         </div>
+        
         <div class="bento-info">
-            <div class="bento-item" onclick="switchView('shop', document.querySelectorAll('.nav-item')[1])">
-                <span>CATALOG</span>
-                <p>РЮКЗАКИ →</p>
+            <div class="bento-item">
+                <span>ОПЫТ РАБОТЫ</span>
+                <p>2+ ГОДА В ИНДУСТРИИ</p>
             </div>
-            <div class="bento-item" onclick="switchView('shop', document.querySelectorAll('.nav-item')[1])">
-                <span>CATALOG</span>
-                <p>АКСЕССУАРЫ →</p>
+            <div class="bento-item">
+                <span>ДОВЕРИЕ</span>
+                <p>800+ СЧАСТЛИВЫХ КЛИЕНТОВ</p>
             </div>
-            <div class="bento-item" style="grid-column: span 2; background: var(--glass);">
-                <span>SYSTEM STATUS</span>
-                <p>ONLINE. NEXT DROP: SPRING 2026</p>
+            <div class="bento-item" style="grid-column: span 2; border-color: rgba(212, 175, 55, 0.3);">
+                <span>СПЕЦИАЛИЗАЦИЯ</span>
+                <p style="color: var(--gold);">ТОЛЬКО ТОПОВЫЕ БРЕНДЫ И ШМОТКИ БЕЗ НАКРУТКИ ЦЕНЫ</p>
             </div>
         </div>
+
         <button onclick="switchView('shop', document.querySelectorAll('.nav-item')[1])" style="width: 100%; padding: 20px; background: #fff; border: none; border-radius: 15px; font-weight: 900; font-size: 11px;">ПЕРЕЙТИ К ПОКУПКАМ</button>
     </div>
 
