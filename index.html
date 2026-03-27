@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DALI ESSENCE</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --bg: #000; --glass: rgba(255,255,255,0.03); --border: rgba(255,255,255,0.08); }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
         
         body { 
             margin: 0; background: var(--bg); color: #fff; 
@@ -20,27 +20,23 @@
         .main-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
         .gradient-sphere {
             position: absolute; width: 140vw; height: 140vw; border-radius: 50%;
-            filter: blur(80px); opacity: 0.12; z-index: 1;
+            filter: blur(80px); opacity: 0.1; z-index: 1;
             background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
             animation: slowMove 20s infinite alternate ease-in-out;
         }
         @keyframes slowMove { from { transform: translate(-20%, -10%); } to { transform: translate(10%, 15%); } }
 
-        /* ОТКЛИК НА ТАП */
-        .touch-hint { position: absolute; width: 50px; height: 50px; border: 1px solid rgba(212, 175, 55, 0.4); border-radius: 50%; pointer-events: none; opacity: 0; z-index: 2000; }
-        @keyframes hint-anim { 0% { transform: scale(0.5); opacity: 0.8; } 100% { transform: scale(3); opacity: 0; } }
-
         /* КОНТЕНЕР СТРАНИЦ */
         .page {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: none; flex-direction: column; padding: 0 20px;
+            display: none; flex-direction: column; padding: 0 16px;
             z-index: 10; overflow-y: auto; padding-bottom: 120px;
         }
         .page.active { display: flex; }
 
         /* ХЕДЕР (ОБЩИЙ) */
         .hero { padding-top: 6vh; padding-bottom: 3vh; text-align: center; flex-shrink: 0; }
-        .dali-title { font-size: 30px; font-weight: 900; letter-spacing: -1px; position: relative; margin: 0; }
+        .dali-title { font-size: 28px; font-weight: 900; letter-spacing: -1px; position: relative; margin: 0; }
         
         /* РЕДКИЙ ГЛИТЧ */
         .dali-title::before, .dali-title::after { content: 'DALI ESSENCE'; position: absolute; top: 0; left: 0; width: 100%; opacity: 0; }
@@ -48,37 +44,73 @@
         .dali-title::after { color: #00f0ff; z-index: -2; animation: rare-glitch 6s infinite 0.1s; }
         @keyframes rare-glitch { 0%, 94%, 100% { opacity: 0; transform: translate(0); } 95% { opacity: 0.8; transform: translate(-5px, 2px); clip-path: inset(10% 0 40% 0); } 97% { opacity: 0.8; transform: translate(5px, -2px); clip-path: inset(50% 0 10% 0); } }
 
-        /* BENTO GRID */
-        .bento-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .bento-card { background: var(--glass); backdrop-filter: blur(15px); border: 1px solid var(--border); border-radius: 24px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; }
+        /* BENTO GRID (HOME) */
+        .bento-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .bento-card { background: var(--glass); backdrop-filter: blur(15px); border: 1px solid var(--border); border-radius: 20px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; }
         .card-full { grid-column: span 2; }
-        .label { font-size: 8px; color: #555; font-weight: 700; letter-spacing: 2px; margin-bottom: 6px; }
-        .value { font-size: 16px; font-weight: 900; }
+        .label { font-size: 7px; color: #555; font-weight: 700; letter-spacing: 2px; margin-bottom: 4px; }
+        .value { font-size: 14px; font-weight: 900; }
 
         /* НИЖНЯЯ КНОПКА CATALOG НА HOME */
-        .shop-btn-container { margin-top: auto; padding-top: 20px; }
+        .shop-btn-container { margin-top: auto; padding-top: 20px; flex-shrink: 0; }
         .shop-btn {
-            background: var(--gold); color: #000; font-weight: 900; font-size: 14px;
-            height: 65px; display: flex; align-items: center; justify-content: center;
-            border-radius: 20px; letter-spacing: 2px;
-            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2); transition: 0.2s;
+            background: var(--gold); color: #000; font-weight: 900; font-size: 12px;
+            height: 55px; display: flex; align-items: center; justify-content: center;
+            border-radius: 16px; letter-spacing: 2px; transition: 0.2s;
         }
-        .shop-btn:active { transform: scale(0.96); }
+        .shop-btn:active { transform: scale(0.97); }
+
+        /* КАТАЛОГ: ДВОЙНАЯ СЕТКА (ВАРИАНТ Б) */
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding-bottom: 20px;
+        }
+
+        .product-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 10px;
+            display: flex; flex-direction: column;
+            transition: 0.2s;
+        }
+        .product-card:active { transform: scale(0.98); border-color: rgba(212, 175, 55, 0.3); }
+
+        .product-image {
+            width: 100%;
+            aspect-ratio: 1 / 1; /* Квадратное фото */
+            background: rgba(255,255,255,0.02);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: #222; font-size: 10px; font-weight: 700;
+            margin-bottom: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        /* Заглушка вместо фото */
+        .product-image::before { content: 'DALI_ITEM'; opacity: 0.5; }
+
+        .product-name { font-size: 11px; font-weight: 600; color: #fff; margin-bottom: 4px; line-height: 1.3; height: 2.6em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .product-price { font-size: 13px; font-weight: 900; color: var(--gold); }
+        .product-old-price { font-size: 10px; color: #555; text-decoration: line-through; margin-left: 5px; font-weight: 400; }
 
         /* НАВИГАЦИЯ */
-        .nav { position: fixed; bottom: 30px; left: 20px; right: 20px; height: 65px; background: rgba(15,15,15,0.85); backdrop-filter: blur(20px); border-radius: 25px; border: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
+        .nav { position: fixed; bottom: 25px; left: 16px; right: 16px; height: 60px; background: rgba(10,10,10,0.85); backdrop-filter: blur(20px); border-radius: 20px; border: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: #444; font-size: 7px; font-weight: 800; letter-spacing: 1px; transition: 0.3s; }
         .nav-item.active { color: #fff; }
-        .nav-icon { font-size: 18px; margin-bottom: 4px; }
+        .nav-icon { font-size: 16px; margin-bottom: 3px; }
 
         /* СТИЛЬ ЗАКАЗА */
-        .order-status { border-left: 2px solid var(--gold); padding-left: 12px; margin-top: 8px; }
-        .order-step { font-size: 11px; font-weight: 700; color: #fff; }
+        .order-status { border-left: 2px solid var(--gold); padding-left: 10px; margin-top: 6px; }
+        .order-step { font-size: 10px; font-weight: 700; color: #fff; }
 
-        .empty-state { text-align: center; margin-top: 50px; color: #333; font-size: 10px; letter-spacing: 2px; }
+        .empty-state { text-align: center; margin-top: 50px; color: #333; font-size: 9px; letter-spacing: 2px; }
     </style>
 </head>
-<body ontouchstart="handleTouch(event)">
+<body>
 
 <div class="main-background"><div class="gradient-sphere"></div></div>
 
@@ -88,7 +120,7 @@
         <div class="bento-card card-full">
             <div class="label">ACTIVE_DELIVERY</div>
             <div class="order-status">
-                <div style="font-size: 10px; color: #888;">#DALI-8892-XT</div>
+                <div style="font-size: 9px; color: #888;">#DALI-8892-XT</div>
                 <div class="order-step">IN TRANSIT: MOSCOW HUB</div>
             </div>
         </div>
@@ -108,7 +140,39 @@
 
 <div id="catalog" class="page">
     <div class="hero"><h1 class="dali-title">CATALOG</h1></div>
-    <div class="empty-state">СИСТЕМА ЗАГРУЗКИ ТОВАРОВ...</div>
+    
+    <div class="product-grid">
+        <div class="product-card" onclick="tg.HapticFeedback.impactOccurred('light')">
+            <div class="product-image"></div>
+            <div class="product-name">DALI ESSENCE OVERSIZE HOODIE BLACK</div>
+            <div class="product-price">7,500 ₽ <span class="product-old-price">9,000 ₽</span></div>
+        </div>
+        <div class="product-card" onclick="tg.HapticFeedback.impactOccurred('light')">
+            <div class="product-image"></div>
+            <div class="product-name">DALI CORE T-SHIRT WHITE (LIMITED)</div>
+            <div class="product-price">3,200 ₽</div>
+        </div>
+        <div class="product-card" onclick="tg.HapticFeedback.impactOccurred('light')">
+            <div class="product-image"></div>
+            <div class="product-name">DALI ESSENCE CARGO PANTS TECH</div>
+            <div class="product-price">8,900 ₽</div>
+        </div>
+        <div class="product-card" onclick="tg.HapticFeedback.impactOccurred('light')">
+            <div class="product-image"></div>
+            <div class="product-name">DALI ACCESSORIES BEANIE</div>
+            <div class="product-price">2,500 ₽ <span class="product-old-price">3,000 ₽</span></div>
+        </div>
+        <div class="product-card" onclick="tg.HapticFeedback.impactOccurred('light')">
+            <div class="product-image"></div>
+            <div class="product-name">DALI ESSENCE SOCKS PACK</div>
+            <div class="product-price">1,200 ₽</div>
+        </div>
+         <div class="product-card" onclick="tg.HapticFeedback.impactOccurred('light')">
+            <div class="product-image"></div>
+            <div class="product-name">DALI ESSENCE BELT BLACK</div>
+            <div class="product-price">4,500 ₽</div>
+        </div>
+    </div>
 </div>
 
 <div id="orders" class="page">
@@ -131,35 +195,20 @@
 <script>
     let tg = window.Telegram.WebApp;
     tg.expand();
+    tg.headerColor = '#000000';
+    tg.backgroundColor = '#000000';
 
     // ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ
     function switchPage(pageId) {
-        // Убираем активный класс со всех страниц и кнопок
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-
-        // Активируем нужную страницу
         document.getElementById(pageId).classList.add('active');
-        
-        // Подсвечиваем кнопку в меню
         const navItems = document.querySelectorAll('.nav-item');
         const pages = ['home', 'catalog', 'orders', 'profile'];
         navItems[pages.indexOf(pageId)].classList.add('active');
-
-        // Легкая вибрация при переключении
         tg.HapticFeedback.selectionChanged();
-    }
-
-    function handleTouch(e) {
-        const touch = e.touches[0];
-        const hint = document.createElement('div');
-        hint.className = 'touch-hint';
-        hint.style.left = `${touch.clientX - 25}px`;
-        hint.style.top = `${touch.clientY - 25}px`;
-        hint.style.animation = 'hint-anim 0.5s ease-out forwards';
-        document.body.appendChild(hint);
-        tg.HapticFeedback.impactOccurred('light');
-        setTimeout(() => hint.remove(), 500);
+        // Скроллим наверх при смене страницы
+        document.getElementById(pageId).scrollTop = 0;
     }
 </script>
 </body>
