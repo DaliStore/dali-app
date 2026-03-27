@@ -13,7 +13,7 @@
         body { 
             margin: 0; background: var(--bg); color: #fff; 
             font-family: 'Montserrat', sans-serif; height: 100vh;
-            user-select: none;
+            user-select: none; overflow: hidden;
         }
 
         /* ЖИВОЙ ФОН */
@@ -38,29 +38,29 @@
         }
         @keyframes hint-anim { 0% { transform: scale(0.5); opacity: 0.8; } 100% { transform: scale(3); opacity: 0; } }
 
-        /* КОНТЕНТ */
+        /* КОНТЕНТ (Скроллируемый) */
         #app {
             position: relative; z-index: 10;
             display: flex; flex-direction: column;
-            min-height: 100vh; width: 100%;
-            padding: 0 20px;
+            height: 100vh; width: 100%;
+            padding: 0 20px; overflow-y: auto;
+            padding-bottom: 100px; /* Отступ под навигацию */
         }
 
+        /* ХЕДЕР СО СКРИНА 2 (ОПТИМИЗИРОВАННЫЙ ГЛИТЧ) */
         .hero { padding-top: 6vh; padding-bottom: 3vh; text-align: center; }
-        .dali-title { font-size: 34px; font-weight: 900; letter-spacing: -1px; position: relative; }
+        .dali-title { font-size: 30px; font-weight: 900; letter-spacing: -1px; position: relative; }
         
-        /* РЕДКИЙ ГЛИТЧ */
         .dali-title::before, .dali-title::after { content: 'DALI ESSENCE'; position: absolute; top: 0; left: 0; width: 100%; opacity: 0; }
         .dali-title::before { color: #ff003c; z-index: -1; animation: rare-glitch 6s infinite; }
         .dali-title::after { color: #00f0ff; z-index: -2; animation: rare-glitch 6s infinite 0.1s; }
         @keyframes rare-glitch { 0%, 94%, 100% { opacity: 0; transform: translate(0); } 95% { opacity: 0.8; transform: translate(-5px, 2px); clip-path: inset(10% 0 40% 0); } 97% { opacity: 0.8; transform: translate(5px, -2px); clip-path: inset(50% 0 10% 0); } }
 
-        /* BENTO GRID */
+        /* BENTO GRID СО СКРИНА 3 */
         .bento-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-bottom: 120px;
         }
 
         .bento-card {
@@ -76,7 +76,7 @@
         .label { font-size: 8px; color: #555; font-weight: 700; letter-spacing: 2px; margin-bottom: 6px; }
         .value { font-size: 16px; font-weight: 900; }
 
-        /* КНОПКА МАГАЗИНА (A) */
+        /* ЗОЛОТАЯ КНОПКА (A) */
         .shop-btn {
             background: var(--gold);
             color: #000;
@@ -101,10 +101,30 @@
         .order-id { font-size: 10px; color: #888; font-family: monospace; }
         .order-step { font-size: 11px; font-weight: 700; color: #fff; margin-top: 4px; }
 
-        /* NAV */
-        .nav { position: fixed; bottom: 30px; left: 20px; right: 20px; height: 60px; background: rgba(15,15,15,0.7); backdrop-filter: blur(20px); border-radius: 25px; border: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
-        .nav-item { font-size: 7px; color: #444; font-weight: 800; }
+        /* НАВИГАЦИЯ (НИЗ) - ОБНОВЛЕННЫЕ КНОПКИ */
+        .nav { 
+            position: fixed; bottom: 30px; left: 20px; right: 20px; 
+            height: 65px; 
+            background: rgba(15,15,15,0.8); 
+            backdrop-filter: blur(20px); 
+            border-radius: 25px; 
+            border: 1px solid var(--border); 
+            display: flex; justify-content: space-around; align-items: center; 
+            z-index: 1000; 
+        }
+        
+        .nav-item { 
+            display: flex; flex-direction: column; align-items: center; 
+            color: #444; 
+            font-size: 7px; /* Ультра-маленький шрифт */
+            font-weight: 800; 
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        
         .nav-item.active { color: #fff; }
+        .nav-icon { font-size: 18px; margin-bottom: 4px; }
+
     </style>
 </head>
 <body ontouchstart="handleTouch(event)">
@@ -118,7 +138,7 @@
 
     <div class="bento-grid">
         <div class="card-full" style="margin-bottom: 8px;">
-            <div class="shop-btn" onclick="tg.HapticFeedback.impactOccurred('medium')">ENTER SYSTEM_STORE</div>
+            <div class="shop-btn" onclick="tg.HapticFeedback.impactOccurred('medium')">ENTER CATALOG</div>
         </div>
 
         <div class="bento-card card-full">
@@ -131,9 +151,9 @@
         </div>
 
         <div class="bento-card">
-            <div class="label">ACCOUNT</div>
-            <div class="value">DALI_ID</div>
-            <div style="font-size: 9px; color: #00ff00; margin-top: 4px;">VERIFIED</div>
+            <div class="label">DALI_ID</div>
+            <div class="value">DANILA_DALI</div>
+            <div style="font-size: 9px; color: #00ff00; margin-top: 4px; font-weight: 700;">VERIFIED</div>
         </div>
 
         <div class="bento-card">
@@ -145,15 +165,18 @@
 </div>
 
 <nav class="nav">
-    <div class="nav-item active">HOME</div>
-    <div class="nav-item">SHOP</div>
-    <div class="nav-item">BAG</div>
-    <div class="nav-item">ID</div>
+    <div class="nav-item active"><span class="nav-icon">🏠</span>HOME</div>
+    <div class="nav-item"><span class="nav-icon">🛍️</span>CATALOG</div>
+    <div class="nav-item"><span class="nav-icon">📦</span>ORDERS</div>
+    <div class="nav-item"><span class="nav-icon">👤</span>PROFILE</div>
 </nav>
 
 <script>
     let tg = window.Telegram.WebApp;
     tg.expand();
+    tg.headerColor = '#000000';
+    tg.backgroundColor = '#000000';
+
     function handleTouch(e) {
         const touch = e.touches[0];
         const hint = document.createElement('div');
