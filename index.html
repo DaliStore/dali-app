@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DALI ESSENCE</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --bg: #000; }
+        :root { --gold: #d4af37; --bg: #000; --glass: rgba(255,255,255,0.03); --border: rgba(255,255,255,0.08); }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
@@ -29,69 +29,80 @@
         }
         @keyframes slowMove { from { transform: translate(-20%, -10%); } to { transform: translate(10%, 15%); } }
 
-        /* ЭФФЕКТ КАСАНИЯ (РИППЛ) */
+        /* ЭФФЕКТ КАСАНИЯ */
         .touch-hint {
             position: absolute; width: 50px; height: 50px;
             border: 1px solid rgba(212, 175, 55, 0.4);
             border-radius: 50%; pointer-events: none;
-            opacity: 0; z-index: 50;
+            opacity: 0; z-index: 100;
         }
-        @keyframes hint-anim {
-            0% { transform: scale(0.5); opacity: 0.8; }
-            100% { transform: scale(3); opacity: 0; }
-        }
+        @keyframes hint-anim { 0% { transform: scale(0.5); opacity: 0.8; } 100% { transform: scale(3); opacity: 0; } }
 
         /* КОНТЕНТ */
-        .hero {
+        #app {
             position: relative; z-index: 10;
-            display: flex; flex-direction: column; align-items: center;
-            justify-content: flex-start; padding-top: 18vh;
+            display: flex; flex-direction: column;
             height: 100vh; width: 100%;
+            overflow-y: auto; padding: 0 20px;
         }
 
-        /* РЕДКИЙ ГЛИТЧ НА МАССИВНОМ ШРИФТЕ */
+        /* HEADER */
+        .hero {
+            padding-top: 8vh; padding-bottom: 4vh;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
         .dali-title {
-            font-size: 38px; font-weight: 900; letter-spacing: -1px;
-            position: relative; color: #fff; text-align: center;
-            background: none;
+            font-size: 36px; font-weight: 900; letter-spacing: -1px;
+            position: relative; color: #fff; margin: 0;
         }
 
-        /* Слои для редкого глитча */
+        /* РЕДКИЙ ГЛИТЧ */
         .dali-title::before, .dali-title::after {
-            content: 'DALI ESSENCE';
-            position: absolute; top: 0; left: 0; width: 100%;
-            opacity: 0; /* Скрыты по умолчанию */
+            content: 'DALI ESSENCE'; position: absolute; top: 0; left: 0; width: 100%; opacity: 0;
         }
-
-        /* Анимация: глитч срабатывает редко (пауза 5 сек, всплеск 0.2 сек) */
-        .dali-title::before {
-            color: #ff003c; z-index: -1;
-            animation: rare-glitch 6s infinite;
-        }
-        .dali-title::after {
-            color: #00f0ff; z-index: -2;
-            animation: rare-glitch 6s infinite 0.1s;
-        }
+        .dali-title::before { color: #ff003c; z-index: -1; animation: rare-glitch 6s infinite; }
+        .dali-title::after { color: #00f0ff; z-index: -2; animation: rare-glitch 6s infinite 0.1s; }
 
         @keyframes rare-glitch {
             0%, 94%, 100% { opacity: 0; transform: translate(0); }
             95% { opacity: 0.8; transform: translate(-5px, 2px); clip-path: inset(10% 0 40% 0); }
             97% { opacity: 0.8; transform: translate(5px, -2px); clip-path: inset(50% 0 10% 0); }
-            99% { opacity: 0.5; transform: translate(-2px, 3px); }
         }
 
-        .protocol {
-            font-size: 8px; color: var(--gold);
-            letter-spacing: 5px; margin-top: 15px;
-            opacity: 0.5; font-weight: 400;
+        /* BENTO GRID */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 12px;
+            margin-bottom: 120px;
         }
 
-        /* МИНИ-ВКЛАДКИ */
+        .bento-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 20px;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+
+        /* Крупная карточка (Статус) */
+        .card-large { grid-column: span 2; min-height: 140px; }
+
+        .label { font-size: 8px; color: #555; font-weight: 700; letter-spacing: 2px; margin-bottom: 8px; }
+        .value { font-size: 18px; font-weight: 900; color: #fff; }
+        .sub-value { font-size: 10px; color: var(--gold); margin-top: 4px; }
+
+        .manifesto-text { font-size: 12px; font-weight: 400; color: #888; line-height: 1.4; font-style: italic; }
+
+        /* NAV */
         .nav { 
-            position: fixed; bottom: 30px; left: 10%; right: 10%;
+            position: fixed; bottom: 30px; left: 20px; right: 20px;
             height: 60px; background: rgba(255,255,255,0.03);
             backdrop-filter: blur(20px); border-radius: 25px;
-            border: 1px solid rgba(255,255,255,0.06);
+            border: 1px solid var(--border);
             display: flex; justify-content: space-around; align-items: center;
         }
         .nav-item { font-size: 7px; color: #444; font-weight: 800; letter-spacing: 1px; }
@@ -104,9 +115,33 @@
     <div class="gradient-sphere"></div>
 </div>
 
-<div class="hero">
-    <h1 class="dali-title">DALI ESSENCE</h1>
-    <div class="protocol">SYSTEM PROTOCOL V1.0</div>
+<div id="app">
+    <div class="hero">
+        <h1 class="dali-title">DALI ESSENCE</h1>
+        <div style="font-size: 8px; color: #333; letter-spacing: 5px; margin-top: 10px;">V1.0 SYSTEM ACCESS</div>
+    </div>
+
+    <div class="bento-grid">
+        <div class="bento-card card-large">
+            <div>
+                <div class="label">USER_IDENTIFICATION</div>
+                <div class="value">DANILA_DALI</div>
+                <div class="sub-value">RANK: ELITE PARTNER</div>
+            </div>
+            <div style="text-align: right; font-size: 10px; color: #00ff00; font-weight: 900;">ONLINE</div>
+        </div>
+
+        <div class="bento-card">
+            <div class="label">CORE_VALUE</div>
+            <div class="manifesto-text">DISCIPLINE IS THE ONLY WAY TO STYLE.</div>
+        </div>
+
+        <div class="bento-card">
+            <div class="label">DALI_CREDITS</div>
+            <div class="value" style="color: var(--gold);">2,450</div>
+            <div class="sub-value">BONUS SYSTEM</div>
+        </div>
+    </div>
 </div>
 
 <nav class="nav">
@@ -120,7 +155,6 @@
     let tg = window.Telegram.WebApp;
     tg.expand();
 
-    // Функция отклика на нажатие
     function handleTouch(e) {
         const touch = e.touches[0];
         const hint = document.createElement('div');
@@ -128,12 +162,8 @@
         hint.style.left = `${touch.clientX - 25}px`;
         hint.style.top = `${touch.clientY - 25}px`;
         hint.style.animation = 'hint-anim 0.5s ease-out forwards';
-        
         document.body.appendChild(hint);
-        
-        // Вибрация Telegram
         tg.HapticFeedback.impactOccurred('light');
-
         setTimeout(() => hint.remove(), 500);
     }
 </script>
