@@ -3,170 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DALI SYSTEM — LUXURY DROP</title>
+    <title>DALI ESSENCE — SYSTEM</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #fff; --bg: #000; --dim: #555; --gold: #d4af37; }
+        :root { --accent: #fff; --bg: #000; --gold: #d4af37; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
             margin: 0; background: var(--bg); color: var(--accent); 
-            font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh;
+            font-family: 'Space Mono', monospace; overflow: hidden; height: 100vh;
             text-transform: uppercase;
         }
 
-        #app { height: 100vh; display: flex; flex-direction: column; position: relative; }
-
-        /* ФОН С ОПТИМИЗАЦИЕЙ */
+        /* ФОН (ОПТИМИЗИРОВАННЫЙ ИЗ ПРОШЛОГО ШАГА) */
         .main-background {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #000;
-            z-index: 0;
-            overflow: hidden;
-            pointer-events: none;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 0; overflow: hidden; pointer-events: none;
         }
-
         .gradient-sphere {
-            position: absolute;
-            width: 120vw;
-            height: 120vw;
-            border-radius: 50%;
-            filter: blur(60px); /* Уменьшил блюр для производительности */
-            opacity: 0.15;
-            z-index: 1;
-            will-change: transform; /* Подсказка браузеру для плавности */
+            position: absolute; width: 120vw; height: 120vw; border-radius: 50%;
+            filter: blur(60px); opacity: 0.15; z-index: 1; will-change: transform;
+        }
+        .sphere-1 { background: radial-gradient(circle, var(--gold) 0%, transparent 70%); top: -20%; left: -20%; }
+        .sphere-2 { background: radial-gradient(circle, #333 0%, transparent 70%); bottom: -20%; right: -20%; }
+        .noise { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('https://grainy-gradients.vercel.app/noise.svg'); opacity: 0.05; z-index: 2; pointer-events: none; }
+
+        /* ЭТАП 2: GLITCH HEADER */
+        .hero-container {
+            flex: 1; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            position: relative; z-index: 10;
         }
 
-        .sphere-1 {
-            background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
-            top: -20%; left: -20%;
+        .glitch-title {
+            font-size: 32px; font-weight: 700; letter-spacing: 8px;
+            position: relative; color: #fff;
+            animation: glitch-skew 4s infinite linear alternate-reverse;
         }
 
-        .sphere-2 {
-            background: radial-gradient(circle, #333 0%, transparent 70%);
-            bottom: -20%; right: -20%;
+        .glitch-title::before, .glitch-title::after {
+            content: 'DALI ESSENCE'; position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.8;
         }
 
-        /* ЛЕГКОЕ КАСАНИЕ (РИППЛ) */
-        .touch-hint {
-            position: absolute;
-            width: 40px; height: 40px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0;
-            z-index: 5;
-            transform: scale(1);
+        .glitch-title::before { color: var(--gold); animation: glitch-anim 2s infinite linear alternate-reverse; z-index: -1; }
+        .glitch-title::after { color: #555; animation: glitch-anim-2 3s infinite linear alternate-reverse; z-index: -2; }
+
+        @keyframes glitch-anim {
+            0% { clip-path: inset(50% 0 30% 0); transform: translate(-2px, 2px); }
+            20% { clip-path: inset(10% 0 80% 0); transform: translate(2px, -2px); }
+            100% { clip-path: inset(40% 0 43% 0); transform: translate(-2px, 2px); }
         }
 
-        @keyframes hint-anim {
-            0% { transform: scale(0.5); opacity: 0.8; }
-            100% { transform: scale(2.5); opacity: 0; }
+        @keyframes glitch-anim-2 {
+            0% { clip-path: inset(15% 0 15% 0); transform: translate(2px, -2px); }
+            50% { clip-path: inset(80% 0 5% 0); transform: translate(-2px, 2px); }
+            100% { clip-path: inset(20% 0 60% 0); transform: translate(2px, -2px); }
         }
 
-        .noise {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://grainy-gradients.vercel.app/noise.svg');
-            opacity: 0.05;
-            z-index: 2;
-            pointer-events: none;
+        @keyframes glitch-skew {
+            0% { transform: skew(0deg); }
+            10% { transform: skew(3deg); }
+            15% { transform: skew(-2deg); }
+            20% { transform: skew(0deg); }
+            100% { transform: skew(0deg); }
         }
 
-        /* КОНТЕНТ */
-        .view { 
-            position: relative;
-            z-index: 10;
-            flex: 1; overflow-y: auto; display: none; 
-            padding: 20px;
-        }
-        .view.active { display: flex; flex-direction: column; }
-
+        /* STATUS BADGE */
         .status-badge { 
-            align-self: flex-end;
+            position: absolute; top: 20px; right: 20px;
             display: flex; align-items: center; gap: 8px; 
-            background: rgba(255,255,255,0.03); padding: 10px 16px; 
+            background: rgba(255,255,255,0.03); padding: 8px 14px; 
             border-radius: 30px; border: 1px solid rgba(0,255,0,0.2);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px); z-index: 20;
         }
-        .dot { width: 6px; height: 6px; background: #00ff00; border-radius: 50%; box-shadow: 0 0 10px #00ff00; }
+        .dot { width: 5px; height: 5px; background: #00ff00; border-radius: 50%; box-shadow: 0 0 10px #00ff00; }
 
-        /* NAV */
-        .nav { position: fixed; bottom: 20px; left: 15px; right: 15px; height: 70px; background: rgba(10,10,10,0.6); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; border-radius: 25px; border: 1px solid rgba(255,255,255,0.05); z-index: 1000; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--dim); font-size: 8px; font-weight: 800; }
+        /* NAV (БЕЗ ИЗМЕНЕНИЙ) */
+        .nav { position: fixed; bottom: 20px; left: 15px; right: 15px; height: 70px; background: rgba(10,10,10,0.6); backdrop-filter: blur(25px); display: flex; justify-content: space-around; align-items: center; border-radius: 25px; border: 1px solid rgba(255,255,255,0.08); z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #444; font-size: 8px; font-weight: 800; }
         .nav-item.active { color: #fff; }
-        .nav-icon { font-size: 18px; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
-<div id="app" ontouchstart="showHint(event)">
+<div id="app">
     <div class="main-background">
         <div class="gradient-sphere sphere-1" id="s1"></div>
         <div class="gradient-sphere sphere-2" id="s2"></div>
         <div class="noise"></div>
     </div>
 
-    <div id="view-home" class="view active" onscroll="syncScroll(this)">
-        <div class="status-badge">
-            <div class="dot"></div>
-            <span style="font-size: 8px; color: #00ff00; font-weight: 900; letter-spacing: 1px;">SYSTEM ONLINE</span>
-        </div>
-        <div style="height: 150vh;"></div> </div>
+    <div class="status-badge">
+        <div class="dot"></div>
+        <span style="font-size: 8px; color: #00ff00; font-weight: 900; letter-spacing: 1px;">CONNECTED</span>
+    </div>
 
-    <div id="view-shop" class="view"></div>
-    <div id="view-cart" class="view"></div>
-    <div id="view-profile" class="view"></div>
+    <div class="hero-container">
+        <div class="glitch-title">DALI ESSENCE</div>
+        <p style="font-size: 8px; color: #555; margin-top: 20px; letter-spacing: 4px;">SYSTEM PROTOCOL v1.0</p>
+    </div>
 
     <nav class="nav">
-        <div class="nav-item active" onclick="switchView('home', this)"><span class="nav-icon">🏠</span>HOME</div>
-        <div class="nav-item" onclick="switchView('shop', this)"><span class="nav-icon">🛍️</span>SHOP</div>
-        <div class="nav-item" onclick="switchView('cart', this)"><span class="nav-icon">🛒</span>BAG</div>
-        <div class="nav-item" onclick="switchView('profile', this)"><span class="nav-icon">👤</span>ID</div>
+        <div class="nav-item active">🏠 HOME</div>
+        <div class="nav-item">🛍️ SHOP</div>
+        <div class="nav-item">🛒 BAG</div>
+        <div class="nav-item">👤 ID</div>
     </nav>
 </div>
 
 <script>
     let tg = window.Telegram.WebApp;
     tg.expand();
-
     const s1 = document.getElementById('s1');
     const s2 = document.getElementById('s2');
 
-    // Плавный параллакс без зависаний
-    function syncScroll(el) {
-        const top = el.scrollTop;
+    // Тот самый плавный параллакс
+    document.addEventListener('mousemove', (e) => {
+        const x = e.clientX / window.innerWidth;
+        const y = e.clientY / window.innerHeight;
         requestAnimationFrame(() => {
-            s1.style.transform = `translate3d(0, ${top * 0.2}px, 0)`;
-            s2.style.transform = `translate3d(0, ${-top * 0.1}px, 0)`;
+            s1.style.transform = `translate3d(${x * 30}px, ${y * 30}px, 0)`;
+            s2.style.transform = `translate3d(${-x * 50}px, ${-y * 50}px, 0)`;
         });
-    }
-
-    // Легкая реакция на касание
-    function showHint(e) {
-        const touch = e.touches[0];
-        const hint = document.createElement('div');
-        hint.className = 'touch-hint';
-        hint.style.left = `${touch.clientX - 20}px`;
-        hint.style.top = `${touch.clientY - 20}px`;
-        hint.style.animation = 'hint-anim 0.5s ease-out forwards';
-        
-        document.body.appendChild(hint);
-        
-        tg.HapticFeedback.impactOccurred('light');
-
-        setTimeout(() => hint.remove(), 500);
-    }
-
-    function switchView(viewId, el) {
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-        document.getElementById(`view-${viewId}`).classList.add('active');
-        el.classList.add('active');
-        tg.HapticFeedback.selectionChanged();
-    }
+    });
 </script>
 </body>
 </html>
