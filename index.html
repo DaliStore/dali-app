@@ -18,33 +18,67 @@
 
         #app { height: 100vh; display: flex; flex-direction: column; position: relative; }
 
-        /* ЭТАП 1: АТМОСФЕРНЫЙ ФОН */
+        /* ЭТАП 1: ГЛУБОКИЙ ЖИВОЙ ГРАДИЕНТ */
         .main-background {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; /* Базовый цвет */
+            background: #000;
             z-index: 0;
             overflow: hidden;
         }
 
-        /* Эффект шума/зернистости (для премиальности) */
+        /* Анимированные сферы градиента */
+        .gradient-sphere {
+            position: absolute;
+            width: 150vw;
+            height: 150vw;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            z-index: 1;
+        }
+
+        .sphere-1 {
+            background: var(--gold);
+            top: -50%;
+            left: -50%;
+            animation: move-1 15s infinite alternate ease-in-out;
+        }
+
+        .sphere-2 {
+            background: #333;
+            bottom: -50%;
+            right: -50%;
+            animation: move-2 12s infinite alternate ease-in-out;
+        }
+
+        @keyframes move-1 {
+            from { transform: translate(0, 0); }
+            to { transform: translate(20%, 30%); }
+        }
+
+        @keyframes move-2 {
+            from { transform: translate(0, 0); }
+            to { transform: translate(-20%, -30%); }
+        }
+
         .noise {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background: url('https://grainy-gradients.vercel.app/noise.svg');
-            opacity: 0.05;
+            opacity: 0.08;
             pointer-events: none;
+            z-index: 2;
         }
 
         .view { 
             position: relative;
-            z-index: 1;
+            z-index: 10;
             flex: 1; overflow-y: auto; display: none; 
             padding: 20px;
         }
         .view.active { display: flex; flex-direction: column; }
 
-        /* STATUS BADGE */
         .status-badge { 
             align-self: flex-end;
             display: flex; align-items: center; gap: 6px; 
@@ -56,8 +90,7 @@
         .dot { width: 5px; height: 5px; background: #00ff00; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        /* NAV БЕЗ ИЗМЕНЕНИЙ */
-        .nav { position: fixed; bottom: 20px; left: 15px; right: 15px; height: 75px; background: rgba(10,10,10,0.8); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; border-radius: 25px; border: 1px solid rgba(255,255,255,0.05); z-index: 1000; }
+        .nav { position: fixed; bottom: 20px; left: 15px; right: 15px; height: 75px; background: rgba(10,10,10,0.7); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; border-radius: 25px; border: 1px solid rgba(255,255,255,0.05); z-index: 1000; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--dim); font-size: 8px; font-weight: 700; }
         .nav-item.active { color: #fff; }
         .nav-icon { font-size: 20px; margin-bottom: 5px; }
@@ -66,17 +99,18 @@
 <body>
 
 <div id="app">
-    <div class="main-background" id="bg-layer">
+    <div class="main-background">
+        <div class="gradient-sphere sphere-1"></div>
+        <div class="gradient-sphere sphere-2"></div>
         <div class="noise"></div>
-        </div>
+    </div>
 
     <div id="view-home" class="view active">
         <div class="status-badge">
             <div class="dot"></div>
             <span style="font-size: 8px; color: #00ff00; font-weight: 900;">SYSTEM ONLINE</span>
         </div>
-        
-        </div>
+    </div>
 
     <div id="view-shop" class="view"></div>
     <div id="view-cart" class="view"></div>
